@@ -90,8 +90,8 @@ describe('no dates or article numbers on the page', () => {
     expect(doc.querySelectorAll('.nt__date')).toHaveLength(0);
   });
   it('lists articles in the order given by their order numbers', () => {
-    const titles = parse(site.html('issues/2026-10')).querySelectorAll('.toc__t').map((a) => a.text.trim());
-    expect(titles.indexOf('A Dispatch')).toBeLessThan(titles.indexOf('Another Dispatch'));
+    const titles = parse(site.html('issues/2026-10')).querySelectorAll('.seg--frontier .dp__t').map((a) => a.text.trim());
+    expect(titles).toEqual(['A Dispatch', 'Another Dispatch']);
   });
 });
 
@@ -103,4 +103,17 @@ describe('issue label', () => {
       expect(text.replace(/Issue No\. /g, ''), p).not.toMatch(/No\. \d/);
     }
   });
+});
+
+describe('"In this issue" list', () => {
+  for (const p of ['', 'issues/2026-10']) {
+    it(`leaves out The Frontier but keeps it as its own section (${p || 'home'})`, () => {
+      const doc = parse(site.html(p));
+      const toc = doc.querySelector('.toc')!;
+      expect(toc.querySelectorAll('.toc__seg').map((h) => h.text.trim())).toEqual(['Club Announcements', 'Feature Articles', 'Opinion']);
+      expect(toc.text).not.toContain('Dispatch');
+      expect(toc.querySelector('.toc__total')!.text).toContain('4 articles');
+      expect(doc.querySelectorAll('.seg--frontier .dp__t').map((a) => a.text.trim())).toEqual(['A Dispatch', 'Another Dispatch']);
+    });
+  }
 });

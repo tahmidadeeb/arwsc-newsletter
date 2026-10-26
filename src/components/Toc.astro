@@ -1,5 +1,9 @@
 ---
-/** Table of contents: every article, grouped by segment, journal style. */
+/**
+ * "In this issue": the articles grouped by section, journal style.
+ * Frontier dispatches are short and live only in their own section below,
+ * so sections with the "frontier" treatment are left out of this list.
+ */
 import type { Article } from '../lib/content';
 import { formatAuthors } from '../lib/format';
 import { articleUrl } from '../lib/nav';
@@ -9,7 +13,8 @@ interface Props {
   groups: { segment: Segment; articles: Article[] }[];
   title?: string;
 }
-const { groups, title = 'In this issue' } = Astro.props;
+const { groups: all, title = 'In this issue' } = Astro.props;
+const groups = all.filter((g) => g.segment.treatment !== 'frontier');
 const n = groups.reduce((t, g) => t + g.articles.length, 0);
 ---
 {n > 0 && (
