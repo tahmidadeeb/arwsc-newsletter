@@ -1,0 +1,117 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Cover from '../../../components/Cover.astro';
+import Toc from '../../../components/Toc.astro';
+import SegmentBlock from '../../../components/SegmentBlock.astro';
+import EditorsNote from '../../../components/EditorsNote.astro';
+import { getIssue, getIssues, type IssueBundle } from '../../../lib/content';
+import { issueUrl } from '../../../lib/nav';
+import { blocksAfterLead } from '../../../lib/ordering';
+
+export async function getStaticPaths() {
+  const issues = await getIssues();
+  return issues.map((issue, i) => ({
+    params: { issue: issue.folder },
+    props: { newer: issues[i - 1] ?? null, older: issues[i + 1] ?? null },
+  }));
+}
+const { newer, older } = Astro.props;
+const bundle = (await getIssue(Astro.params.issue!)) as IssueBundle;
+const { issue, groups, lead, articles } = bundle;
+const blocks = blocksAfterLead(groups, lead?.slug);
+const leadAnchor = lead && !blocks.some((b) => b.segment.key === lead.segment) ? lead.segment : undefined;
+---
+<Base
+  title={`${issue.title} — Issue No. ${issue.issueNumber}, ${issue.monthLabel}`}
+  description={`Issue ${issue.issueNumber} of the arw,sc newsletter, ${issue.monthLabel}: ${articles.length} ${articles.length === 1 ? 'article' : 'articles'}.`}
+  theme={issue.theme}
+  issueLine={`Issue No. ${issue.issueNumber} · ${issue.monthLabel}`}
+  ogImage={issue.cover?.src.src ?? `/og/issues/${issue.folder}.png`}
+>
+  <div class="wrap">
+    <Cover issue={issue} lead={lead} size="hero" level="h1" leadAnchor={leadAnchor} />
+
+    {(issue.hasNote || articles.length > 0) && (
+      <div class:list={['front', issue.hasNote && 'front--note']}>
+        {issue.hasNote && <div id="note"><EditorsNote issue={issue} /></div>}
+        <Toc groups={groups} />
+      </div>
+    )}
+
+    {blocks.map((g, i) => (
+      <SegmentBlock segment={g.segment} articles={g.articles} index={i + 1} />
+    ))}
+
+    {(newer || older) && (
+      <nav class="sib" aria-label="Other issues">
+        {older ? (
+          <a class="sib__a" href={issueUrl(older.folder)}>
+            <span class="label">← Previous issue</span>
+            <span class="sib__t">{older.title}</span>
+            <span class="mono sib__m">Issue No. {older.issueNumber} · {older.monthLabel}</span>
+          </a>
+        ) : <span />}
+        {newer && (
+          <a class="sib__a sib__a--next" href={issueUrl(newer.folder)}>
+            <span class="label">Next issue →</span>
+            <span class="sib__t">{newer.title}</span>
+            <span class="mono sib__m">Issue No. {newer.issueNumber} · {newer.monthLabel}</span>
+          </a>
+        )}
+      </nav>
+    )}
+  </div>
+</Base>
+
+<style>
+  .front {
+    display: grid;
+    gap: 2.5rem;
+    align-items: start;
+    padding-top: clamp(2.5rem, 5vw, 4rem);
+  }
+  @media (min-width: 60rem) {
+    .front--note {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: 3.5rem;
+      align-items: start;
+    }
+  }
+  .sib {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: clamp(3rem, 6vw, 5rem);
+    border-top: 1px solid var(--ink);
+  }
+  @media (min-width: 40rem) {
+    .sib {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .sib__a {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1.2rem 0;
+    text-decoration: none;
+  }
+  .sib__a--next {
+    text-align: right;
+    align-items: flex-end;
+  }
+  .sib__t {
+    font-family: var(--f-display);
+    font-size: 1.6rem;
+    font-style: italic;
+    line-height: 1.1;
+  }
+  .sib__a:hover .sib__t {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+  }
+  .sib__m {
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+  }
+</style>

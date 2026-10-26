@@ -1,0 +1,271 @@
+/* Long-form article typography. Applied to rendered Markdown inside .prose */
+
+.prose {
+  font-size: clamp(1.125rem, 1.04rem + 0.3vw, 1.25rem);
+  line-height: 1.68;
+  max-width: var(--measure);
+  hanging-punctuation: first;
+}
+.prose > * + * {
+  margin-top: 1.15em;
+}
+.prose > :where(*) {
+  margin-bottom: 0;
+}
+.prose > :where(p:first-child, *:first-child) {
+  margin-top: 0;
+}
+
+/* Opening paragraph: a Playfair drop cap in the accent colour. */
+.prose > p:first-of-type::first-letter {
+  font-family: var(--f-display);
+  font-weight: 500;
+  color: var(--accent-text);
+  /* Fallback (Firefox): a float sized to span the first three lines. */
+  float: left;
+  font-size: 4.25em;
+  line-height: 0.8;
+  margin: 0.1em 0.1em 0 0;
+}
+/* Modern browsers size the letter to sit exactly from the top of line 1 to
+   the baseline of line 3. */
+@supports (initial-letter: 3) or (-webkit-initial-letter: 3) {
+  .prose > p:first-of-type::first-letter {
+    float: none;
+    font-size: inherit;
+    line-height: inherit;
+    margin: 0 0.12em 0 0;
+    -webkit-initial-letter: 3;
+    initial-letter: 3;
+  }
+}
+
+.prose h2,
+.prose h3,
+.prose h4 {
+  margin-top: 2.1em;
+  line-height: 1.12;
+}
+.prose h2 {
+  font-size: 1.85em;
+  font-weight: 500;
+}
+.prose h3 {
+  font-size: 1.35em;
+  font-style: italic;
+  font-weight: 500;
+}
+.prose h4 {
+  font-family: var(--f-label);
+  font-size: 0.8em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.prose h2 + *,
+.prose h3 + *,
+.prose h4 + * {
+  margin-top: 0.6em;
+}
+
+.prose a {
+  color: var(--accent-text);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+.prose a:hover {
+  text-decoration-color: currentColor;
+}
+
+.prose strong {
+  font-weight: 650;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.4em;
+}
+.prose li + li {
+  margin-top: 0.4em;
+}
+.prose ul li::marker {
+  color: var(--accent-text);
+  content: "■  ";
+  font-size: 0.6em;
+}
+.prose ol li::marker {
+  font-family: var(--f-mono);
+  font-size: 0.8em;
+  color: var(--accent-text);
+}
+
+/* Pull-style blockquote */
+.prose blockquote {
+  margin-inline: 0;
+  margin-block: 1.8em;
+  padding: 0.3em 0 0.3em 1.3em;
+  border-left: 3px solid var(--accent);
+  font-family: var(--f-display);
+  font-style: italic;
+  font-size: 1.3em;
+  line-height: 1.38;
+}
+.prose blockquote p + p {
+  margin-top: 0.6em;
+}
+
+.prose hr {
+  border: 0;
+  margin: 2.6em 0;
+  text-align: center;
+  height: auto;
+}
+.prose hr::before {
+  content: "⁂";
+  font-family: var(--f-display);
+  font-size: 1.4em;
+  color: var(--accent-text);
+}
+
+.prose code {
+  font-family: var(--f-mono);
+  font-size: 0.85em;
+  padding: 0.08em 0.3em;
+  background: var(--paper-deep);
+}
+.prose pre {
+  overflow-x: auto;
+  padding: 1em;
+  background: var(--paper-deep);
+  font-size: 0.85em;
+}
+.prose pre code {
+  background: none;
+  padding: 0;
+}
+
+/* Tables scroll sideways on small screens (wrapper added by rehype-tables). */
+.prose .table-scroll {
+  overflow-x: auto;
+  margin-block: 1.8em;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--f-label);
+  font-size: 0.82em;
+  font-variant-numeric: tabular-nums;
+}
+.prose th,
+.prose td {
+  text-align: left;
+  padding: 0.6em 0.9em 0.6em 0;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+  min-width: 7em;
+}
+.prose th {
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  border-bottom-color: var(--ink);
+}
+.prose tr:last-child td {
+  border-bottom: 0;
+}
+
+/* Figures (remark-figures) */
+.prose .fig {
+  margin: 2.2em 0;
+}
+.prose .fig img {
+  width: 100%;
+  height: auto;
+  background: var(--paper-deep);
+}
+.prose .fig figcaption {
+  margin-top: 0.75em;
+  font-family: var(--f-label);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  border-left: 1px solid var(--accent);
+  padding-left: 0.8em;
+}
+.prose .fig__num {
+  font-family: var(--f-mono);
+  color: var(--accent-text);
+  margin-right: 0.35em;
+}
+.prose .fig__credit::before {
+  content: "· ";
+  font-family: var(--f-label);
+}
+.prose .fig__credit {
+  font-family: var(--f-mono);
+  font-size: 0.92em;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+@media (min-width: 72rem) {
+  .prose .fig--wide {
+    width: min(100vw - 2 * var(--gutter), var(--page) - 2 * var(--gutter));
+    max-width: none;
+    margin-left: calc(-1 * var(--prose-offset, 0px));
+  }
+}
+
+/* Footnote markers and references */
+.prose sup {
+  line-height: 0;
+}
+.prose sup a[data-footnote-ref] {
+  font-family: var(--f-mono);
+  font-size: 0.7em;
+  text-decoration: none;
+  padding: 0 0.15em;
+}
+.prose sup a[data-footnote-ref]::before {
+  content: "[";
+}
+.prose sup a[data-footnote-ref]::after {
+  content: "]";
+}
+.prose .references {
+  margin-top: 3.2em;
+  padding-top: 1.2em;
+  border-top: 1px solid var(--ink);
+  font-size: 0.86em;
+  line-height: 1.55;
+}
+.prose .references h2 {
+  margin: 0 0 0.8em;
+  font-family: var(--f-label);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.prose .references ol {
+  padding-left: 2em;
+}
+.prose .references li::marker {
+  color: var(--ink-soft);
+}
+.prose .references li p {
+  display: inline;
+  margin: 0;
+}
+.prose .references a[data-footnote-backref] {
+  font-family: var(--f-display);
+  text-decoration: none;
+  margin-left: 0.3em;
+}
+.prose .references li:target {
+  background: var(--accent-wash);
+  outline: 4px solid var(--accent-wash);
+}
+.prose :target {
+  scroll-margin-top: 2rem;
+}

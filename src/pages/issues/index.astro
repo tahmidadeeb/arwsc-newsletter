@@ -1,0 +1,87 @@
+---
+import Base from '../../layouts/Base.astro';
+import Cover from '../../components/Cover.astro';
+import EmptyState from '../../components/EmptyState.astro';
+import { getIssue, getIssues } from '../../lib/content';
+import { themeStyle } from '../../lib/theme';
+
+const issues = await getIssues();
+const bundles = (await Promise.all(issues.map((i) => getIssue(i.folder)))).filter((b) => b !== null);
+const years = [...new Set(bundles.map((b) => b.issue.publishDate.getUTCFullYear()))];
+---
+<Base title="Archive" description="Every issue of the arw,sc newsletter, newest first." ogImage="/og/issues.png">
+  <div class="wrap">
+    <header class="arch__head">
+      <h1 class="arch__h">The archive</h1>
+      <p class="arch__count mono">
+        {bundles.length === 0 ? 'No issues yet' : `${bundles.length} ${bundles.length === 1 ? 'issue' : 'issues'}`}
+      </p>
+    </header>
+
+    {bundles.length === 0 ? (
+      <EmptyState title="The first issue is in preparation" body="Published issues will be collected here, newest first." glyph="¶" />
+    ) : (
+      years.map((y) => (
+        <section class="arch__year" aria-labelledby={`y-${y}`}>
+          <h2 class="arch__y mono" id={`y-${y}`}>{y}</h2>
+          <ul class="arch__grid">
+            {bundles
+              .filter((b) => b.issue.publishDate.getUTCFullYear() === y)
+              .map((b) => (
+                <li class="themed" style={themeStyle(b.issue.theme)}>
+                  <Cover issue={b.issue} size="card" level="h3" articleCount={b.articles.length} />
+                </li>
+              ))}
+          </ul>
+        </section>
+      ))
+    )}
+  </div>
+</Base>
+
+<style>
+  .arch__head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding: clamp(2rem, 5vw, 4rem) 0 1.2rem;
+    border-bottom: 1px solid var(--ink);
+  }
+  .arch__h {
+    font-size: clamp(3rem, 2rem + 5vw, 6.5rem);
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: -0.015em;
+  }
+  .arch__count {
+    color: var(--ink-soft);
+    margin: 0;
+  }
+  .arch__year {
+    display: grid;
+    gap: 1.5rem;
+    padding-top: 2rem;
+  }
+  @media (min-width: 52rem) {
+    .arch__year {
+      grid-template-columns: 6rem 1fr;
+    }
+  }
+  .arch__y {
+    font-size: 1rem;
+    margin: 0;
+    color: var(--accent-text);
+    font-family: var(--f-mono);
+    font-weight: 400;
+  }
+  .arch__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.8rem 1.6rem;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 13.5rem), 1fr));
+  }
+</style>

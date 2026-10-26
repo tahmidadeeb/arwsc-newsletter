@@ -1,0 +1,189 @@
+---
+import '../styles/prose.css';
+import { render } from 'astro:content';
+import Base from './Base.astro';
+import Tag from '../components/Tag.astro';
+import Byline from '../components/Byline.astro';
+import Hero from '../components/Hero.astro';
+import NextArticle from '../components/NextArticle.astro';
+import { segmentFor, type Article, type IssueBundle } from '../lib/content';
+import { issueUrl } from '../lib/nav';
+import { blocksAfterLead } from '../lib/ordering';
+import { headlineHtml } from '../lib/format';
+
+interface Props {
+  article: Article;
+  bundle: IssueBundle;
+  next: Article | null;
+}
+const { article: a, bundle, next } = Astro.props;
+const { issue } = bundle;
+const seg = segmentFor(a.segment);
+const segIndex = blocksAfterLead(bundle.groups, bundle.lead?.slug).findIndex((g) => g.segment.key === a.segment) + 1;
+const body = a.entry.body ?? '';
+const hasBody = body.trim().length > 0;
+const words = body.split(/\s+/).filter(Boolean).length;
+const minutes = Math.max(1, Math.round(words / 230));
+const { Content } = await render(a.entry);
+const description = (a.dek ?? a.summary).slice(0, 300);
+---
+<Base
+  title={a.title}
+  description={description}
+  theme={issue.theme}
+  issueLine={`Issue No. ${issue.issueNumber} · ${issue.monthLabel}`}
+  ogImage={a.hero?.src.src ?? issue.cover?.src.src ?? `/og/issues/${issue.folder}/${a.slug}.png`}
+  article={{ published: a.date, authors: a.authors }}
+>
+  <article class="art">
+    <header class="wrap art__head">
+      <p class="art__crumb">
+        <a class="mono art__issue" href={issueUrl(issue.folder)}>Issue No. {issue.issueNumber} · {issue.monthLabel}</a>
+        {seg && <Tag label={seg.label} index={segIndex || undefined} href={`${issueUrl(issue.folder)}#${seg.key}`} />}
+      </p>
+      <h1 class:list={['art__t', 'reveal', a.title.length > 90 && 'art__t--long']} style="--i:0" set:html={headlineHtml(a.title)} />
+      {a.dek && <p class="art__dek reveal" style="--i:1">{a.dek}</p>}
+      <div class="art__meta reveal" style="--i:2">
+        <Byline authors={a.authors} size="md" max={12} />
+        {hasBody && <span class="mono art__rt">{minutes} min read</span>}
+      </div>
+    </header>
+
+    <div class="wrap reveal" style="--i:3">
+      <Hero article={a} />
+    </div>
+
+    <div class="wrap art__grid">
+      <aside class="art__side" aria-label="About this article">
+        <dl class="art__facts">
+          <dt class="label">Issue</dt>
+          <dd><a href={issueUrl(issue.folder)}>{issue.title}</a></dd>
+          {seg && <dt class="label">Section</dt>}
+          {seg && <dd>{seg.label}</dd>}
+          <dt class="label">{a.authors.length === 1 ? 'Author' : 'Authors'}</dt>
+          <dd>{a.authors.map((n) => <span class="art__au">{n}</span>)}</dd>
+        </dl>
+      </aside>
+      <div class="art__main">
+        {hasBody ? (
+          <div class="prose">
+            <Content />
+          </div>
+        ) : (
+          <p class="art__summary">{a.summary}</p>
+        )}
+        <NextArticle next={next} issue={issue} />
+      </div>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .art__head {
+    padding-top: clamp(2rem, 5vw, 4rem);
+  }
+  .art__crumb {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem 1rem;
+    margin: 0 0 clamp(1.2rem, 3vw, 2rem);
+  }
+  .art__issue {
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+  .art__issue:hover {
+    color: var(--accent-text);
+  }
+  .art__t {
+    font-size: clamp(2.5rem, 1.5rem + 4.4vw, 5.6rem);
+    font-weight: 400;
+    line-height: 0.98;
+    letter-spacing: -0.01em;
+    max-width: 20ch;
+    overflow-wrap: anywhere;
+  }
+  .art__t--long {
+    font-size: clamp(2rem, 1.3rem + 2.8vw, 3.8rem);
+    max-width: 28ch;
+  }
+  .art__dek {
+    margin: 1.2rem 0 0;
+    max-width: 44ch;
+    font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.6rem);
+    line-height: 1.35;
+    font-style: italic;
+    color: var(--ink-soft);
+  }
+  .art__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.4rem 1.4rem;
+    margin-top: 1.6rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--ink);
+  }
+  .art__rt {
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+  }
+
+  .art__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding-top: clamp(2rem, 4vw, 3.5rem);
+  }
+  @media (min-width: 72rem) {
+    .art__grid {
+      grid-template-columns: 14rem minmax(0, 1fr);
+      gap: 4rem;
+      --prose-offset: calc(14rem + 4rem);
+    }
+  }
+  .art__side {
+    display: none;
+  }
+  @media (min-width: 72rem) {
+    .art__side {
+      display: block;
+    }
+    .art__facts {
+      position: sticky;
+      top: 2rem;
+    }
+  }
+  .art__facts {
+    margin: 0;
+    padding-top: 0.6rem;
+    border-top: 3px solid var(--accent);
+  }
+  .art__facts dt {
+    margin-top: 1rem;
+    color: var(--ink-soft);
+    font-size: 0.6875rem;
+  }
+  .art__facts dd {
+    margin: 0.25rem 0 0;
+    font-family: var(--f-display);
+    font-size: 1.05rem;
+    line-height: 1.25;
+  }
+  .art__facts dd a {
+    text-decoration: none;
+  }
+  .art__au {
+    display: block;
+  }
+  .art__main {
+    min-width: 0;
+  }
+  .art__summary {
+    margin: 0;
+    max-width: var(--measure);
+    font-size: 1.2rem;
+  }
+</style>

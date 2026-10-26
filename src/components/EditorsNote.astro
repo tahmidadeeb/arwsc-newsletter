@@ -1,0 +1,70 @@
+---
+import { render } from 'astro:content';
+import type { Issue } from '../lib/content';
+import { issueUrl } from '../lib/nav';
+
+interface Props {
+  issue: Issue;
+  /** Home page: clamp the note and link to the issue page. */
+  excerpt?: boolean;
+}
+const { issue, excerpt = false } = Astro.props;
+const { Content } = await render(issue.entry);
+---
+<aside class:list={['note', excerpt && 'note--excerpt']} aria-labelledby={`note-${issue.folder}`}>
+  <h2 class="note__h label" id={`note-${issue.folder}`}>From the editor</h2>
+  <div class="note__body">
+    <Content />
+  </div>
+  {excerpt && <a class="note__more label" href={`${issueUrl(issue.folder)}#note`}>Read the full note →</a>}
+</aside>
+
+<style>
+  .note {
+    position: relative;
+    padding: 1.4rem 1.5rem 1.5rem;
+    background: var(--accent-wash);
+    border-top: 3px solid var(--accent);
+  }
+  .note__h {
+    margin: 0 0 0.9rem;
+    color: var(--accent-text);
+  }
+  .note__body {
+    font-size: 1.06rem;
+    line-height: 1.6;
+  }
+  .note__body :global(p) {
+    margin: 0 0 0.9em;
+  }
+  .note__body :global(p:first-child::first-letter) {
+    font-family: var(--f-display);
+    color: var(--accent-text);
+    float: left;
+    font-size: 3.1em;
+    line-height: 0.8;
+    margin: 0.08em 0.08em 0 0;
+  }
+  @supports (initial-letter: 2) or (-webkit-initial-letter: 2) {
+    .note__body :global(p:first-child::first-letter) {
+      float: none;
+      font-size: inherit;
+      line-height: inherit;
+      margin: 0 0.1em 0 0;
+      -webkit-initial-letter: 2;
+      initial-letter: 2;
+    }
+  }
+  .note--excerpt .note__body {
+    max-height: 15.5rem;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(#000 70%, transparent);
+    mask-image: linear-gradient(#000 70%, transparent);
+  }
+  .note__more {
+    display: inline-block;
+    margin-top: 0.6rem;
+    color: var(--accent-text);
+    text-decoration: none;
+  }
+</style>

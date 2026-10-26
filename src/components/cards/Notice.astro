@@ -1,0 +1,50 @@
+---
+import { headlineHtml } from '../../lib/format';
+import type { Article } from '../../lib/content';
+import { formatAuthors } from '../../lib/format';
+import { articleUrl } from '../../lib/nav';
+
+interface Props {
+  article: Article;
+}
+const { article: a } = Astro.props;
+---
+<article class="nt has-stretch card-lift">
+  <div class="nt__body">
+    <h3 class="nt__t">
+      <a class="stretch hover-title" href={articleUrl(a.issue, a.slug)} set:html={headlineHtml(a.title)} />
+    </h3>
+    <p class="nt__s">{a.summary}</p>
+    <p class="nt__by label">{formatAuthors(a.authors.slice(0, 2))}{a.authors.length > 2 ? ' et al.' : ''}</p>
+  </div>
+</article>
+
+<style>
+  .nt {
+    padding: 1.1rem 1.2rem;
+    border: 1px dashed color-mix(in oklab, var(--ink) 45%, transparent);
+    background: color-mix(in oklab, var(--paper) 70%, white);
+    min-width: 0;
+  }
+  .nt__body {
+    min-width: 0;
+  }
+  .nt__t {
+    font-size: 1.3rem;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+  }
+  .nt__t a {
+    text-decoration: none;
+  }
+  .nt__s {
+    margin: 0.4rem 0;
+    font-size: 0.975rem;
+    color: var(--ink-soft);
+  }
+  .nt__by {
+    margin: 0;
+    font-size: 0.6875rem;
+    color: var(--ink-soft);
+  }
+</style>

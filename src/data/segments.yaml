@@ -1,0 +1,26 @@
+# Sections of the newsletter, in the order they appear.
+# key:       the value authors write in "segment:" (lowercase, no spaces)
+# label:     the heading readers see
+# order:     display order (lowest first)
+# treatment: visual style — standard | opinion | frontier | notice
+# description: optional one line, shown on the About page
+- key: announcements
+  label: Club Announcements
+  order: 1
+  treatment: notice
+  description: News, events and calls from the club.
+- key: feature
+  label: Feature Articles
+  order: 2
+  treatment: standard
+  description: Long-form reporting and essays on research.
+- key: opinion
+  label: Opinion
+  order: 3
+  treatment: opinion
+  description: Arguments and perspectives from members.
+- key: frontier
+  label: The Frontier
+  order: 4
+  treatment: frontier
+  description: A dispatch on recent scientific breakthroughs.

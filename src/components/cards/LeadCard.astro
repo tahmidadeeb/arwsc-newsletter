@@ -1,0 +1,84 @@
+---
+import { headlineHtml } from '../../lib/format';
+import { Image } from 'astro:assets';
+import type { Article } from '../../lib/content';
+import { articleUrl } from '../../lib/nav';
+import Byline from '../Byline.astro';
+import Placeholder from '../Placeholder.astro';
+
+interface Props {
+  article: Article;
+  level?: 'h3' | 'h2';
+  /** wide: image and text side by side; tall: stacked */
+  shape?: 'wide' | 'tall';
+}
+const { article: a, level = 'h3', shape = 'wide' } = Astro.props;
+const H = level;
+---
+<article class:list={['lead', `lead--${shape}`, 'has-stretch']}>
+  <div class="lead__media">
+    {a.hero ? (
+      <Image src={a.hero.src} alt={a.hero.alt} widths={[640, 960, 1280, 1600]} sizes="(min-width: 64rem) 55vw, 100vw" />
+    ) : (
+      <Placeholder glyph={a.title} ratio="4 / 3" />
+    )}
+  </div>
+  <div class="lead__text">
+    <H class="lead__t">
+      <a class="stretch hover-title" href={articleUrl(a.issue, a.slug)} set:html={headlineHtml(a.title)} />
+    </H>
+    {a.dek && <p class="lead__dek">{a.dek}</p>}
+    <p class="lead__s">{a.summary}</p>
+    <Byline authors={a.authors} size="md" />
+  </div>
+</article>
+
+<style>
+  .lead {
+    display: grid;
+    gap: 1.25rem;
+    min-width: 0;
+  }
+  @media (min-width: 52rem) {
+    .lead--wide {
+      grid-template-columns: 7fr 5fr;
+      gap: 2.5rem;
+      align-items: end;
+    }
+  }
+  .lead__media {
+    overflow: hidden;
+  }
+  .lead__media :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  .lead__text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    min-width: 0;
+  }
+  .lead__t {
+    font-size: clamp(2rem, 1.4rem + 2.4vw, 3.4rem);
+    line-height: 1.02;
+    overflow-wrap: anywhere;
+  }
+  .lead__t a {
+    text-decoration: none;
+  }
+  .lead__dek {
+    margin: 0;
+    font-size: 1.25rem;
+    line-height: 1.4;
+    font-style: italic;
+  }
+  .lead__s {
+    margin: 0;
+    color: var(--ink-soft);
+  }
+  .lead__dek + .lead__s {
+    display: none;
+  }
+</style>

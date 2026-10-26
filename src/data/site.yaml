@@ -1,0 +1,39 @@
+# Full name, as shown under the title, in the footer and on the About page.
+clubName: Academic and Research Wing, Science Club – Rajshahi Medical College
+shortName: ARW,SC
+tagline: The official newsletter of the Academic and Research Wing of Science Club at RMC.
+contactEmail: rmcscienceclub@gmail.com
+# Social links: list of { label, url }. Leave empty ([]) if none.
+social:
+  - label: Facebook
+    url: https://www.facebook.com/profile.php?id=61583855690412
+about:
+  intro: >-
+    The Academic and Research Wing of the Science Club at Rajshahi Medical
+    College brings students together around research and scientific
+    conversation.
+  # More paragraphs will be added in a future issue. Add one "- " line per paragraph.
+  body: []
+join:
+  text: >-
+    Article submission is open to all students. Write to us to pitch an
+    article for the next issue!
+
+# ─── Text on other pages ────────────────────────────────────────────────
+team:
+  # Shown under the "Editorial team" heading.
+  intro: The people who commission, edit and publish each issue.
+contact:
+  # Shown under the contact email on the Contact page.
+  note: Pitches, letters, corrections and questions are all welcome.
+signup:
+  # The email signup box on the home page and in the footer.
+  heading: Every issue, in your inbox
+  footerHeading: Get each issue by email
+  text: One email a month when a new issue is published. Nothing else.
+  comingSoon: Email delivery is coming. For now, read every issue here on the site.
+  privacy: We only use your email to send the newsletter. Unsubscribe any time.
+  success: Almost there — check your inbox and click the link to confirm your subscription.
+notFound:
+  # The "page not found" page.
+  text: The page you were looking for has been moved, renamed, or never existed. Try the latest issue or browse the archive.

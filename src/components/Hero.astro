@@ -1,0 +1,62 @@
+---
+import { Picture } from 'astro:assets';
+import type { Article } from '../lib/content';
+import Placeholder from './Placeholder.astro';
+
+interface Props {
+  article: Article;
+}
+const { article: a } = Astro.props;
+const h = a.hero;
+---
+{h ? (
+  <figure class="hero">
+    <Picture
+      src={h.src}
+      alt={h.alt}
+      formats={['avif', 'webp']}
+      widths={[640, 960, 1280, 1920]}
+      sizes="(min-width: 84rem) 80rem, 100vw"
+      loading="eager"
+      fetchpriority="high"
+      class="hero__img"
+    />
+    {(h.caption || h.credit) && (
+      <figcaption class="hero__cap">
+        {h.caption && <span>{h.caption}</span>}
+        {h.credit && <span class="hero__credit mono">{h.credit}</span>}
+      </figcaption>
+    )}
+  </figure>
+) : (
+  <div class="hero hero--type">
+    <Placeholder glyph={a.title} ratio="21 / 6" />
+  </div>
+)}
+
+<style>
+  .hero {
+    margin: clamp(1.8rem, 4vw, 3rem) 0 0;
+  }
+  .hero :global(img) {
+    width: 100%;
+    max-height: 78vh;
+    object-fit: cover;
+  }
+  .hero--type :global(.ph) {
+    min-height: 9rem;
+  }
+  .hero__cap {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.3rem 1.5rem;
+    margin-top: 0.7rem;
+    font-family: var(--f-label);
+    font-size: 0.8125rem;
+    color: var(--ink-soft);
+  }
+  .hero__credit {
+    font-size: 0.75rem;
+  }
+</style>

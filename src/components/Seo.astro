@@ -1,0 +1,33 @@
+---
+import { SITE_TITLE } from '../lib/nav';
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath: string;
+  ogImage?: string;
+  article?: { published: Date; authors: string[] };
+}
+const { title, description, canonicalPath, ogImage, article } = Astro.props;
+const site = Astro.site ?? new URL('http://localhost:4321');
+const canonical = new URL(canonicalPath, site).href;
+const fullTitle = title === SITE_TITLE ? title : `${title} · ${SITE_TITLE}`;
+const image = ogImage ? new URL(ogImage, site).href : undefined;
+---
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+<meta property="og:site_name" content={SITE_TITLE} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:type" content={article ? 'article' : 'website'} />
+{image && <meta property="og:image" content={image} />}
+{image && <meta property="og:image:width" content="1200" />}
+{image && <meta property="og:image:height" content="630" />}
+<meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+{image && <meta name="twitter:image" content={image} />}
+{article && <meta property="article:published_time" content={article.published.toISOString()} />}
+{article?.authors.map((a) => <meta property="article:author" content={a} />)}

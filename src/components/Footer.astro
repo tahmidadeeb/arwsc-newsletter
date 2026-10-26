@@ -1,0 +1,112 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/arwsc-logo.png';
+import { isPlaceholder, loadSite } from '../lib/data';
+import { NAV, SITE_TITLE } from '../lib/nav';
+import Signup from './Signup.astro';
+
+const site = loadSite();
+const year = new Date().getUTCFullYear();
+---
+<footer class="foot">
+  <div class="wrap foot__grid">
+    <div class="foot__brand">
+      <Image src={logo} alt="arw,sc" width={360} class="foot__logo" />
+      <p class="foot__title">{SITE_TITLE}</p>
+      <p class="foot__club">{site.clubName}</p>
+    </div>
+    <div class="foot__signup">
+      <Signup variant="footer" id="signup-footer" />
+    </div>
+    <nav class="foot__nav" aria-label="Footer">
+      <p class="label foot__head">Pages</p>
+      <ul>
+        {NAV.map((n) => <li><a href={n.href}>{n.label === 'Latest' ? 'Latest issue' : n.label}</a></li>)}
+        {site.social.filter((s) => !isPlaceholder(s.url)).map((s) => (
+          <li><a href={s.url} rel="me noopener" target="_blank">{s.label} <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a></li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+  <div class="wrap foot__base mono">
+    <span>© {year} {site.shortName}</span>
+  </div>
+</footer>
+
+<style>
+  .foot {
+    --fg: var(--paper);
+    margin-top: clamp(4rem, 8vw, 7rem);
+    background: var(--ink);
+    color: var(--fg);
+    padding-block: clamp(2.5rem, 5vw, 4rem) 1.5rem;
+  }
+  .foot a {
+    color: var(--fg);
+  }
+  .foot a:hover {
+    color: color-mix(in oklab, var(--secondary) 55%, var(--paper));
+  }
+  .foot :global(:focus-visible) {
+    outline-color: var(--paper);
+  }
+  .foot__grid {
+    display: grid;
+    gap: 2.5rem;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 52rem) {
+    .foot__grid {
+      grid-template-columns: 1.1fr 1.6fr 0.8fr;
+      gap: 3.5rem;
+    }
+  }
+  .foot__logo {
+    width: min(14rem, 100%);
+    height: auto;
+    filter: brightness(1.25);
+  }
+  .foot__title {
+    font-family: var(--f-display);
+    font-size: 1.9rem;
+    line-height: 1;
+    margin: 1rem 0 0.5rem;
+    letter-spacing: -0.02em;
+  }
+  .foot__club {
+    font-family: var(--f-label);
+    font-size: 0.875rem;
+    margin: 0;
+    opacity: 0.8;
+  }
+  .foot__head {
+    margin: 0 0 0.9rem;
+    opacity: 0.75;
+  }
+  .foot__nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.45rem;
+    font-family: var(--f-label);
+    font-size: 0.9375rem;
+  }
+  .foot__nav a {
+    text-decoration: none;
+  }
+  .foot__nav a:hover {
+    text-decoration: underline;
+  }
+  .foot__base {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid color-mix(in oklab, var(--paper) 25%, transparent);
+    font-size: 0.75rem;
+    opacity: 0.78;
+  }
+</style>

@@ -1,0 +1,37 @@
+---
+import type { Article } from '../../lib/content';
+import { formatAuthors } from '../../lib/format';
+import { articleUrl } from '../../lib/nav';
+
+interface Props {
+  article: Article;
+}
+const { article: a } = Astro.props;
+---
+<li class="ci has-stretch">
+  <a class="ci__t stretch hover-title" href={articleUrl(a.issue, a.slug)}>{a.title}</a>
+  <span class="ci__by">{formatAuthors(a.authors.slice(0, 2))}{a.authors.length > 2 ? ' et al.' : ''}</span>
+</li>
+
+<style>
+  .ci {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.8rem 0;
+    border-top: 1px solid var(--rule);
+    min-width: 0;
+    break-inside: avoid;
+  }
+  .ci__t {
+    font-family: var(--f-display);
+    font-size: 1.15rem;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+  .ci__by {
+    font-family: var(--f-label);
+    font-size: 0.8125rem;
+    color: var(--ink-soft);
+  }
+</style>

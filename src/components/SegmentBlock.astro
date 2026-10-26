@@ -1,0 +1,197 @@
+---
+/**
+ * One segment of an issue. The layout is chosen from the treatment and the
+ * number of articles (lib/layout.ts), so any count from 1 to 30+ renders
+ * without gaps. Renders nothing at all when there are no articles.
+ */
+import type { Article } from '../lib/content';
+import { variantFor } from '../lib/layout';
+import type { Segment } from '../lib/types';
+import Tag from './Tag.astro';
+import ArticleCard from './cards/ArticleCard.astro';
+import LeadCard from './cards/LeadCard.astro';
+import OpinionCard from './cards/OpinionCard.astro';
+import Dispatch from './cards/Dispatch.astro';
+import Notice from './cards/Notice.astro';
+import CompactItem from './cards/CompactItem.astro';
+
+interface Props {
+  segment: Segment;
+  articles: Article[];
+  index: number;
+}
+const { segment, index, articles } = Astro.props;
+const n = articles.length;
+const v = variantFor(segment.treatment, n);
+const t = segment.treatment;
+const [first, ...rest] = articles;
+const id = `seg-${segment.key}`;
+const countLabel = `${n} ${n === 1 ? 'piece' : 'pieces'}`;
+---
+{n > 0 && (
+  <section class:list={['seg', `seg--${t}`, `seg--${v}`]} aria-labelledby={id} id={segment.key}>
+    <header class="seg__head">
+      <Tag label={segment.label} index={index} numberOnly />
+      <h2 class="seg__h" id={id}>{segment.label}</h2>
+      <span class="seg__count mono">{countLabel}</span>
+    </header>
+
+    {t === 'standard' && (
+      v === 'single' ? (
+        <LeadCard article={first} />
+      ) : v === 'pair' ? (
+        <div class="g g--2">{articles.map((a) => <ArticleCard article={a} />)}</div>
+      ) : v === 'lead-stack' ? (
+        <div class="g g--lead-stack">
+          <LeadCard article={first} shape="tall" />
+          <div class="stack">{rest.map((a) => <ArticleCard article={a} />)}</div>
+        </div>
+      ) : v === 'lead-grid' ? (
+        <>
+          <LeadCard article={first} />
+          <div class="g g--3 g--after">{rest.map((a) => <ArticleCard article={a} />)}</div>
+        </>
+      ) : (
+        <>
+          <LeadCard article={first} />
+          <div class="g g--2 g--after">{rest.slice(0, 2).map((a) => <ArticleCard article={a} />)}</div>
+          <ul class="clist">{rest.slice(2).map((a) => <CompactItem article={a} />)}</ul>
+        </>
+      )
+    )}
+
+    {t === 'opinion' && (
+      v === 'single' ? (
+        <OpinionCard article={first} size="lg" />
+      ) : v === 'grid-list' ? (
+        <>
+          <div class="g g--3">{articles.slice(0, 3).map((a) => <OpinionCard article={a} />)}</div>
+          <ul class="clist">{articles.slice(3).map((a) => <CompactItem article={a} />)}</ul>
+        </>
+      ) : (
+        <div class:list={['g', v === 'pair' ? 'g--2' : 'g--3']}>
+          {articles.map((a) => <OpinionCard article={a} />)}
+        </div>
+      )
+    )}
+
+    {t === 'frontier' && (
+      <div class:list={['dlist', n >= 4 && 'dlist--2']}>
+        {articles.map((a) => <Dispatch article={a} />)}
+      </div>
+    )}
+
+    {t === 'notice' && (
+      <div class:list={['g', n === 1 ? 'g--1' : 'g--auto']}>
+        {articles.map((a) => <Notice article={a} />)}
+      </div>
+    )}
+  </section>
+)}
+
+<style>
+  .seg {
+    padding-top: clamp(2.5rem, 5vw, 4rem);
+  }
+  .seg__head {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.5rem 1rem;
+    padding-bottom: 1.4rem;
+    margin-bottom: 1.6rem;
+    border-bottom: 1px solid var(--ink);
+  }
+  .seg__h {
+    font-size: clamp(1.9rem, 1.3rem + 2.2vw, 3.1rem);
+    font-weight: 700;
+    letter-spacing: -0.005em;
+  }
+  .seg--opinion .seg__h,
+  .seg--frontier .seg__h {
+    font-style: italic;
+  }
+  .seg__count {
+    color: var(--ink-soft);
+    font-size: 0.75rem;
+  }
+  @media (max-width: 40rem) {
+    .seg__head {
+      grid-template-columns: 1fr auto;
+    }
+    .seg__head :global(.tag) {
+      grid-column: 1 / -1;
+      justify-self: start;
+    }
+  }
+
+  .g {
+    display: grid;
+    gap: 2rem 2rem;
+    grid-template-columns: 1fr;
+  }
+  .g--after {
+    margin-top: 2.5rem;
+  }
+  @media (min-width: 40rem) {
+    .g--2,
+    .g--3 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .g--auto {
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+    }
+  }
+  @media (min-width: 64rem) {
+    .g--3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .g--1 {
+      max-width: 44rem;
+    }
+    .g--lead-stack {
+      grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+      gap: 2.5rem;
+    }
+    .g--lead-stack .stack {
+      padding-left: 2.5rem;
+      border-left: 1px solid var(--rule);
+    }
+  }
+  .stack {
+    display: grid;
+    gap: 2rem;
+    align-content: start;
+  }
+
+  .clist {
+    list-style: none;
+    margin: 2.5rem 0 0;
+    padding: 0;
+    columns: 1;
+    column-gap: 2.5rem;
+  }
+  @media (min-width: 52rem) {
+    .clist {
+      columns: 2;
+    }
+  }
+  @media (min-width: 72rem) {
+    .clist {
+      columns: 3;
+    }
+  }
+
+  .dlist {
+    display: grid;
+    grid-template-columns: 1fr;
+    column-gap: 3rem;
+    max-width: 52rem;
+  }
+  @media (min-width: 52rem) {
+    .dlist--2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      max-width: none;
+    }
+  }
+</style>

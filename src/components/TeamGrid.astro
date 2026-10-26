@@ -1,0 +1,85 @@
+---
+import type { TeamMember } from '../lib/data';
+
+interface Props {
+  members: TeamMember[];
+}
+const { members } = Astro.props;
+const initials = (name: string) =>
+  name
+    .replace(/PLACEHOLDER/g, '')
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0]?.toUpperCase())
+    .join('') || '§';
+---
+{members.length > 0 && (
+  <ul class="team">
+    {members.map((m, i) => (
+      <li class="team__m reveal" style={`--i:${Math.min(i, 8)}`}>
+        {m.photo ? (
+          <img class="team__photo" src={m.photo} alt={`Portrait of ${m.name}`} width="480" height="600" loading="lazy" decoding="async" />
+        ) : (
+          <div class="team__mono graph" aria-hidden="true"><span>{initials(m.name)}</span></div>
+        )}
+        <p class="team__role label">{m.role}</p>
+        <h3 class="team__n">{m.name}</h3>
+        {m.bio && <p class="team__bio">{m.bio}</p>}
+      </li>
+    ))}
+  </ul>
+)}
+
+<style>
+  .team {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 2.4rem 1.8rem;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr));
+  }
+  .team__m {
+    min-width: 0;
+  }
+  .team__photo,
+  .team__mono {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    margin-bottom: 0.9rem;
+    filter: grayscale(0.25);
+  }
+  .team__mono {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--accent);
+    color: var(--on-accent);
+    container-type: inline-size;
+  }
+  .team__mono span {
+    position: absolute;
+    left: 0.08em;
+    bottom: -0.12em;
+    font-family: var(--f-display);
+    font-style: italic;
+    font-size: 58cqi;
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+  .team__role {
+    margin: 0 0 0.35rem;
+    color: var(--accent-text);
+  }
+  .team__n {
+    font-size: 1.5rem;
+    line-height: 1.1;
+    overflow-wrap: anywhere;
+  }
+  .team__bio {
+    margin: 0.5rem 0 0;
+    font-size: 0.98rem;
+    color: var(--ink-soft);
+  }
+</style>

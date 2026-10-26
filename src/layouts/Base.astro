@@ -1,0 +1,53 @@
+---
+import '../styles/global.css';
+import Seo from '../components/Seo.astro';
+import Masthead from '../components/Masthead.astro';
+import Footer from '../components/Footer.astro';
+import { brandTheme } from '../lib/content';
+import { themeStyle, type ThemeTokens } from '../lib/theme';
+import Fonts from '../components/Fonts.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath?: string;
+  theme?: ThemeTokens;
+  ogImage?: string;
+  article?: { published: Date; authors: string[] };
+  masthead?: 'home' | 'compact';
+  issueLine?: string;
+}
+const {
+  title,
+  description,
+  canonicalPath = Astro.url.pathname,
+  theme,
+  ogImage,
+  article,
+  masthead = 'compact',
+  issueLine,
+} = Astro.props;
+const tokens = theme ?? brandTheme();
+---
+<!doctype html>
+<html lang="en" style={themeStyle(tokens)}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content={tokens.paper} />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="/favicon.png" type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <Fonts />
+    <link rel="alternate" type="application/rss+xml" title="the arw,sc newsletter" href="/rss.xml" />
+    <Seo title={title} description={description} canonicalPath={canonicalPath} ogImage={ogImage} article={article} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Masthead variant={masthead} issueLine={issueLine} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

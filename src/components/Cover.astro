@@ -1,0 +1,271 @@
+---
+import { headlineHtml } from '../lib/format';
+/**
+ * An issue cover: an accent-coloured block on graph paper with a giant
+ * cropped issue numeral. With a cover image, the photo is toned into the
+ * issue colour and the text sits on a solid plate so contrast holds.
+ * size="hero" shows the lead story beside it; size="card" is the archive tile.
+ */
+import { Image } from 'astro:assets';
+import type { Article, Issue } from '../lib/content';
+import { segmentFor } from '../lib/content';
+import { articleUrl, issueUrl } from '../lib/nav';
+import Byline from './Byline.astro';
+import Tag from './Tag.astro';
+
+interface Props {
+  issue: Issue;
+  lead?: Article | null;
+  size: 'hero' | 'card';
+  /** Heading level of the issue title. */
+  level?: 'h1' | 'h2' | 'h3';
+  /** Link the issue title to its issue page (home page). */
+  linkIssue?: boolean;
+  articleCount?: number;
+  /** Section key to anchor on the lead story when its section has no block of its own. */
+  leadAnchor?: string;
+}
+const { issue, lead, size, level = 'h2', linkIssue = false, articleCount, leadAnchor } = Astro.props;
+const H = level;
+const seg = lead ? segmentFor(lead.segment) : undefined;
+const longLead = (lead?.title.length ?? 0) > 70;
+const kicker = `Issue No. ${issue.issueNumber} · ${issue.monthLabel}`;
+---
+{size === 'hero' ? (
+  <section class="cover" aria-label={`Issue ${issue.issueNumber}: ${issue.title}`}>
+    <div class:list={['cover__block', 'graph', issue.cover && 'cover__block--photo', 'reveal']} style="--i:3">
+      {issue.cover && (
+        <Image class="cover__photo" src={issue.cover.src} alt={issue.cover.alt} widths={[640, 960, 1280, 1600]} sizes="(min-width: 64rem) 58vw, 100vw" loading="eager" fetchpriority="high" />
+      )}
+      <span class="cover__num" aria-hidden="true">{issue.issueNumber}</span>
+      <div class="cover__plate">
+        <p class="cover__kicker mono">{kicker}</p>
+        <H class="cover__title">
+          {linkIssue ? <a href={issueUrl(issue.folder)} set:html={headlineHtml(issue.title)} /> : <Fragment set:html={headlineHtml(issue.title)} />}
+        </H>
+      </div>
+    </div>
+    <div class="cover__lead reveal" style="--i:4" id={leadAnchor}>
+      {lead ? (
+        <div class="has-stretch cover__leadinner">
+          <p class="cover__eyebrow label">Lead story</p>
+          {seg && <Tag label={seg.label} />}
+          <h2 class:list={['cover__lt', longLead && 'cover__lt--long']}>
+            <a class="stretch hover-title" href={articleUrl(lead.issue, lead.slug)} set:html={headlineHtml(lead.title)} />
+          </h2>
+          {lead.dek ? <p class="cover__ldek">{lead.dek}</p> : <p class="cover__ls">{lead.summary}</p>}
+          <Byline authors={lead.authors} size="md" />
+          <span class="cover__go label" aria-hidden="true">Read the story →</span>
+        </div>
+      ) : (
+        <div class="cover__empty">
+          <p class="cover__eyebrow label">In preparation</p>
+          <p class="cover__ls">Articles for this issue are on their way. Check back soon.</p>
+        </div>
+      )}
+    </div>
+  </section>
+) : (
+  <article class="tile has-stretch card-lift" aria-label={`Issue ${issue.issueNumber}`}>
+    <div class:list={['tile__block', 'graph', issue.cover && 'cover__block--photo']}>
+      {issue.cover && (
+        <Image class="cover__photo" src={issue.cover.src} alt="" widths={[400, 640]} sizes="(min-width: 64rem) 22vw, (min-width: 40rem) 45vw, 90vw" />
+      )}
+      <span class="tile__num" aria-hidden="true">{issue.issueNumber}</span>
+      <div class="tile__plate">
+        <p class="mono tile__k"><span>Issue No. {issue.issueNumber}</span><span class="sr-only"> · </span><span>{issue.monthLabel}</span></p>
+        <H class="tile__t"><a class="stretch" href={issueUrl(issue.folder)} set:html={headlineHtml(issue.title)} /></H>
+      </div>
+    </div>
+    {articleCount !== undefined && (
+      <p class="tile__meta mono">{articleCount === 0 ? 'In preparation' : `${articleCount} ${articleCount === 1 ? 'article' : 'articles'}`}</p>
+    )}
+  </article>
+)}
+
+<style>
+  .cover {
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 3rem);
+    padding-top: clamp(1.5rem, 3vw, 2.5rem);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 56rem) {
+    .cover {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      align-items: stretch;
+    }
+  }
+
+  .cover__block,
+  .tile__block {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--accent);
+    color: var(--on-accent);
+    container-type: inline-size;
+    isolation: isolate;
+  }
+  .cover__block {
+    aspect-ratio: 5 / 4;
+    min-height: 18rem;
+  }
+  @media (min-width: 56rem) {
+    .cover__block {
+      aspect-ratio: auto;
+      min-height: 32rem;
+    }
+  }
+  .cover__photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(1) contrast(1.08);
+    mix-blend-mode: multiply;
+    opacity: 0.95;
+    z-index: -1;
+  }
+  .cover__block--photo {
+    background-image: none;
+  }
+  .cover__num,
+  .tile__num {
+    position: absolute;
+    left: -0.06em;
+    bottom: -0.22em;
+    font-family: var(--f-display);
+    font-weight: 400;
+    font-size: 78cqi;
+    line-height: 0.8;
+    letter-spacing: -0.06em;
+    pointer-events: none;
+  }
+  .cover__block--photo .cover__num,
+  .cover__block--photo .tile__num {
+    opacity: 0.55;
+    mix-blend-mode: screen;
+  }
+  .cover__plate {
+    position: relative;
+    padding: clamp(1.2rem, 3cqi, 2rem);
+    max-width: 30rem;
+  }
+  .cover__block--photo .cover__plate,
+  .cover__block--photo .tile__plate {
+    background: var(--accent);
+  }
+  .cover__kicker {
+    margin: 0 0 0.7rem;
+    font-size: 0.75rem;
+  }
+  .cover__title {
+    font-size: clamp(1.9rem, 1.4rem + 2vw, 3.2rem);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1;
+  }
+  .cover__title a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .cover__title a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+  }
+
+  .cover__lead {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    border-top: 1px solid var(--ink);
+    padding-top: 1.2rem;
+  }
+  @media (min-width: 56rem) {
+    .cover__lead {
+      border-top: 0;
+      border-left: 1px solid var(--rule);
+      padding: 0 0 0 clamp(1.5rem, 3vw, 2.5rem);
+    }
+  }
+  .cover__leadinner,
+  .cover__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .cover__eyebrow {
+    margin: 0;
+    color: var(--ink-soft);
+  }
+  .cover__lt {
+    font-size: clamp(2.1rem, 1.4rem + 2.8vw, 3.8rem);
+    line-height: 1;
+    overflow-wrap: anywhere;
+  }
+  .cover__lt--long {
+    font-size: clamp(1.7rem, 1.2rem + 1.6vw, 2.5rem);
+    line-height: 1.06;
+  }
+  .cover__lt a {
+    text-decoration: none;
+  }
+  .cover__ldek {
+    margin: 0;
+    font-size: 1.3rem;
+    line-height: 1.38;
+    font-style: italic;
+  }
+  .cover__ls {
+    margin: 0;
+    color: var(--ink-soft);
+  }
+  .cover__go {
+    color: var(--accent-text);
+  }
+
+  /* Archive tile */
+  .tile {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .tile__block {
+    aspect-ratio: 3 / 4;
+  }
+  .tile__plate {
+    position: relative;
+    padding: 1rem 1.1rem;
+  }
+  .tile__k {
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 0.5rem;
+    font-size: 0.6875rem;
+  }
+  .tile__t {
+    font-size: clamp(1.4rem, 1.2rem + 0.6vw, 1.75rem);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.04;
+    overflow-wrap: anywhere;
+  }
+  .tile__t a {
+    color: var(--on-accent);
+    text-decoration: none;
+  }
+  .tile:hover .tile__t a {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+  }
+  .tile__num {
+    font-size: 92cqi;
+  }
+  .tile__meta {
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+  }
+</style>

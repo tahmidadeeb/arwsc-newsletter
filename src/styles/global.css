@@ -1,0 +1,304 @@
+@import "tailwindcss";
+/* Fonts are declared in components/Fonts.astro (Latin subsets only). */
+
+/* ------------------------------------------------------------------
+   Tokens. Colours come from the issue theme (set inline on <html> or on
+   an archive card); these are only the brand fallbacks.
+   ------------------------------------------------------------------ */
+:root {
+  --paper: #f5f2eb;
+  --ink: #0f1b1f;
+  --accent: #006c85;
+  --accent-text: #006c85;
+  --on-accent: #f5f2eb;
+  --secondary: #0e94b1;
+  --rule: color-mix(in oklab, var(--ink) 18%, transparent);
+
+  --f-display: "Playfair Display Variable", "Playfair Display", Georgia, "Times New Roman", serif;
+  --f-body: "Newsreader Variable", Charter, "Iowan Old Style", Georgia, "Times New Roman", serif;
+  --f-label: "Schibsted Grotesk Variable", "Helvetica Neue", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "Fragment Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --measure: 66ch;
+  --gutter: clamp(1rem, 4vw, 3rem);
+  --page: 84rem;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  color-scheme: light;
+}
+
+/* Derived colours. Re-declared on .themed so an element that sets its own
+   theme (an archive tile) recomputes them from its own variables. */
+:root,
+.themed {
+  --ink-soft: color-mix(in oklab, var(--ink) 74%, var(--paper));
+  --paper-deep: color-mix(in oklab, var(--paper) 92%, var(--ink));
+  --accent-wash: color-mix(in oklab, var(--accent) 8%, var(--paper));
+  --rule: color-mix(in oklab, var(--ink) 18%, transparent);
+}
+
+@theme {
+  --font-display: var(--f-display);
+  --font-body: var(--f-body);
+  --font-label: var(--f-label);
+  --font-mono: var(--f-mono);
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
+  --color-on-accent: var(--on-accent);
+  --color-secondary: var(--secondary);
+  --color-rule: var(--rule);
+}
+
+/* ------------------------------------------------------------------
+   Base
+   ------------------------------------------------------------------ */
+html {
+  background: var(--paper);
+  color: var(--ink);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  font-family: var(--f-body);
+  font-size: clamp(1.0625rem, 0.98rem + 0.3vw, 1.1875rem);
+  line-height: 1.6;
+  font-optical-sizing: auto;
+  font-kerning: normal;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;
+}
+
+/* Graph paper in the margins, grain over everything, reading column clear. */
+body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(0deg, color-mix(in oklab, var(--accent) 16%, transparent) 0 1px, transparent 1px 40px),
+    repeating-linear-gradient(90deg, color-mix(in oklab, var(--accent) 16%, transparent) 0 1px, transparent 1px 40px),
+    repeating-linear-gradient(0deg, color-mix(in oklab, var(--accent) 7%, transparent) 0 1px, transparent 1px 8px),
+    repeating-linear-gradient(90deg, color-mix(in oklab, var(--accent) 7%, transparent) 0 1px, transparent 1px 8px);
+  -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(50% - var(--page) / 2 - 1rem), transparent calc(50% - var(--page) / 2 + 2rem), transparent calc(50% + var(--page) / 2 - 2rem), #000 calc(50% + var(--page) / 2 + 1rem), #000 100%);
+  mask-image: linear-gradient(90deg, #000 0, #000 calc(50% - var(--page) / 2 - 1rem), transparent calc(50% - var(--page) / 2 + 2rem), transparent calc(50% + var(--page) / 2 - 2rem), #000 calc(50% + var(--page) / 2 + 1rem), #000 100%);
+}
+body::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.22;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.3 0 0 0 0 0.25 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+main {
+  flex: 1;
+}
+
+:where(h1, h2, h3, h4) {
+  font-family: var(--f-display);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -0.012em;
+  text-wrap: balance;
+  margin: 0;
+}
+
+:where(p) {
+  text-wrap: pretty;
+}
+
+a {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+a:hover {
+  color: var(--accent-text);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+img,
+svg,
+picture {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--secondary) 35%, var(--paper));
+  color: var(--ink);
+}
+
+/* ------------------------------------------------------------------
+   Utilities used across components
+   ------------------------------------------------------------------ */
+.wrap {
+  width: 100%;
+  max-width: var(--page);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.measure {
+  max-width: var(--measure);
+}
+
+.label {
+  font-family: var(--f-label);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.3;
+}
+
+.mono {
+  font-family: var(--f-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.rule {
+  border: 0;
+  border-top: 1px solid var(--ink);
+  margin: 0;
+}
+.rule--double {
+  height: 4px;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.rule--hair {
+  border-top-color: var(--rule);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 100;
+  padding: 0.6rem 1rem;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--f-label);
+  font-weight: 600;
+}
+.skip-link:focus {
+  top: 1rem;
+  color: var(--paper);
+}
+
+/* Space before colons/semicolons in display headlines (see headlineHtml). */
+.pt {
+  margin-left: 0.06em;
+}
+
+/* Card link: whole card clickable, title carries the link text. */
+.stretch {
+  text-decoration: none;
+}
+.stretch::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.has-stretch {
+  position: relative;
+}
+.has-stretch:hover .hover-title {
+  text-decoration: underline;
+  text-decoration-color: var(--accent-text);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.12em;
+}
+
+/* Graph-paper texture for colour blocks */
+.graph {
+  background-image:
+    repeating-linear-gradient(0deg, color-mix(in oklab, var(--on-accent) 22%, transparent) 0 1px, transparent 1px 32px),
+    repeating-linear-gradient(90deg, color-mix(in oklab, var(--on-accent) 22%, transparent) 0 1px, transparent 1px 32px),
+    repeating-linear-gradient(0deg, color-mix(in oklab, var(--on-accent) 8%, transparent) 0 1px, transparent 1px 8px),
+    repeating-linear-gradient(90deg, color-mix(in oklab, var(--on-accent) 8%, transparent) 0 1px, transparent 1px 8px);
+}
+
+/* ------------------------------------------------------------------
+   Motion — one orchestrated page load. Off for reduced-motion users.
+   ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    animation: rise 0.7s var(--ease) both;
+    animation-delay: calc(var(--i, 0) * 70ms + 120ms);
+  }
+  .rule-draw {
+    transform-origin: left center;
+    animation: draw 0.6s var(--ease) both;
+    animation-delay: calc(var(--i, 0) * 70ms);
+  }
+  .card-lift {
+    transition: transform 0.35s var(--ease);
+  }
+  .card-lift:hover {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media print {
+  body::before,
+  body::after {
+    display: none;
+  }
+}

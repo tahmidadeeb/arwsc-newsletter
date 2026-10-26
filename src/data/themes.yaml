@@ -1,0 +1,33 @@
+# Named colour presets. An issue can use one with "theme: cobalt",
+# or override single colours. Colours are hex codes like "#1d3fbf".
+# accent:     covers, labels, links
+# background: the paper colour
+# ink:        body text
+# secondary:  optional second accent
+brand:
+  # Derived from the club logo (logo teal #0e94b1), confirmed 2026-10-23.
+  # The accent is a deeper teal so links and labels meet WCAG AA (5.4:1).
+  accent: "#006c85"
+  background: "#f5f2eb"
+  ink: "#0f1b1f"
+  secondary: "#0e94b1"
+cobalt:
+  accent: "#1d3fbf"
+  background: "#f4f0e6"
+  ink: "#121212"
+  secondary: "#c8412b"
+chlorophyll:
+  accent: "#1f5c3a"
+  background: "#f3f1e6"
+  ink: "#141613"
+  secondary: "#9a6b12"
+saffron:
+  accent: "#a8480c"
+  background: "#f7f0e3"
+  ink: "#1b1610"
+  secondary: "#2c4a63"
+oxblood:
+  accent: "#7a1f2b"
+  background: "#f5efe8"
+  ink: "#1a1414"
+  secondary: "#2f5d62"

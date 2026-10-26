@@ -1,0 +1,53 @@
+---
+/**
+ * Typographic stand-in for a missing photo: an accent block on graph paper
+ * with one large display-serif glyph. Decorative, so hidden from screen readers.
+ */
+interface Props {
+  glyph: string;
+  label?: string;
+  ratio?: string;
+  tone?: 'accent' | 'paper';
+  class?: string;
+}
+const { glyph, label, ratio = '4 / 3', tone = 'accent', class: cls } = Astro.props;
+const g = (Array.from(glyph.trim().replace(/^["“'‘(\[]+/, ''))[0] ?? '§').toUpperCase();
+---
+<div class:list={['ph', `ph--${tone}`, 'graph', cls]} style={`aspect-ratio:${ratio}`} aria-hidden="true">
+  <span class="ph__g">{g}</span>
+  {label && <span class="ph__l mono">{label}</span>}
+</div>
+
+<style>
+  .ph {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    background-color: var(--accent);
+    color: var(--on-accent);
+    container-type: inline-size;
+  }
+  .ph--paper {
+    background-color: var(--paper-deep);
+    color: var(--accent-text);
+    --on-accent: var(--accent-text);
+  }
+  .ph__g {
+    position: absolute;
+    right: -0.04em;
+    bottom: -0.3em;
+    font-family: var(--f-display);
+    font-weight: 400;
+    font-style: italic;
+    font-size: 78cqi;
+    line-height: 1;
+    opacity: 0.92;
+  }
+  .ph__l {
+    position: absolute;
+    left: 0.9rem;
+    top: 0.8rem;
+    font-size: 0.6875rem;
+    opacity: 0.85;
+  }
+</style>

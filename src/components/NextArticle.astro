@@ -1,0 +1,84 @@
+---
+import { headlineHtml } from '../lib/format';
+import type { Article, Issue } from '../lib/content';
+import { segmentFor } from '../lib/content';
+import { formatAuthors } from '../lib/format';
+import { articleUrl, issueUrl } from '../lib/nav';
+
+interface Props {
+  next: Article | null;
+  issue: Issue;
+}
+const { next, issue } = Astro.props;
+const seg = next ? segmentFor(next.segment) : undefined;
+---
+<nav class="nx has-stretch card-lift" aria-label="Continue reading">
+  {next ? (
+    <>
+      <p class="label nx__k">Next in this issue{seg && <span class="nx__seg"> · {seg.label}</span>}</p>
+      <p class="nx__t"><a class="stretch hover-title" href={articleUrl(next.issue, next.slug)} set:html={headlineHtml(next.title)} /></p>
+      <p class="nx__s">{next.summary}</p>
+      <p class="nx__by">{formatAuthors(next.authors.slice(0, 3))}{next.authors.length > 3 ? ' et al.' : ''} <span aria-hidden="true" class="nx__arrow">→</span></p>
+    </>
+  ) : (
+    <>
+      <p class="label nx__k">You have reached the end of Issue No. {issue.issueNumber}</p>
+      <p class="nx__t"><a class="stretch hover-title" href={issueUrl(issue.folder)}>Back to the issue</a></p>
+      <p class="nx__s">{issue.title} · {issue.monthLabel}</p>
+    </>
+  )}
+</nav>
+
+<style>
+  .nx {
+    position: relative;
+    display: grid;
+    gap: 0.5rem;
+    margin-top: clamp(3rem, 6vw, 4.5rem);
+    padding: clamp(1.4rem, 3vw, 2.2rem);
+    background: var(--accent);
+    color: var(--on-accent);
+    overflow: hidden;
+  }
+  .nx p {
+    margin: 0;
+  }
+  .nx__k {
+    opacity: 0.85;
+  }
+  .nx__t {
+    font-family: var(--f-display);
+    font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.6rem);
+    line-height: 1.05;
+    font-style: italic;
+    overflow-wrap: anywhere;
+  }
+  .nx a {
+    color: var(--on-accent);
+    text-decoration: none;
+  }
+  .nx:hover .nx__t a {
+    text-decoration: underline;
+    text-decoration-color: var(--on-accent);
+  }
+  .nx__s {
+    max-width: 60ch;
+    opacity: 0.9;
+  }
+  .nx__by {
+    font-family: var(--f-label);
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+  .nx__arrow {
+    display: inline-block;
+    margin-left: 0.4rem;
+    transition: transform 0.3s var(--ease);
+  }
+  .nx:hover .nx__arrow {
+    transform: translateX(4px);
+  }
+  .nx :global(:focus-visible) {
+    outline-color: var(--on-accent);
+  }
+</style>

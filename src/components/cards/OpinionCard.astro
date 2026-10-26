@@ -1,0 +1,71 @@
+---
+import { headlineHtml } from '../../lib/format';
+import type { Article } from '../../lib/content';
+import { formatAuthors } from '../../lib/format';
+import { articleUrl } from '../../lib/nav';
+
+interface Props {
+  article: Article;
+  size?: 'lg' | 'md';
+}
+const { article: a, size = 'md' } = Astro.props;
+const authors = a.authors.length > 3 ? `${a.authors[0]} and ${a.authors.length - 1} others` : formatAuthors(a.authors);
+---
+<article class:list={['op', `op--${size}`, 'has-stretch', 'card-lift']}>
+  <span class="op__q" aria-hidden="true">“</span>
+  <p class="op__who label">{authors}</p>
+  <h3 class="op__t">
+    <a class="stretch hover-title" href={articleUrl(a.issue, a.slug)} set:html={headlineHtml(a.title)} />
+  </h3>
+  <p class="op__s">{a.dek ?? a.summary}</p>
+</article>
+
+<style>
+  .op {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1.4rem 1.4rem 1.3rem;
+    background: var(--accent-wash);
+    border-left: 3px solid var(--accent);
+    min-width: 0;
+  }
+  .op__q {
+    font-family: var(--f-display);
+    font-size: 5.5rem;
+    line-height: 0.6;
+    height: 2.4rem;
+    color: var(--accent);
+    font-style: italic;
+  }
+  .op__who {
+    margin: 0;
+    color: var(--accent-text);
+  }
+  .op__t {
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(1.4rem, 1.15rem + 0.8vw, 1.85rem);
+    line-height: 1.1;
+    overflow-wrap: anywhere;
+  }
+  .op--lg .op__t {
+    font-size: clamp(1.9rem, 1.3rem + 2vw, 3rem);
+  }
+  .op--lg {
+    padding: 2rem clamp(1.4rem, 4vw, 3rem);
+  }
+  .op__t a {
+    text-decoration: none;
+  }
+  .op__s {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--ink-soft);
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

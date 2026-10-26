@@ -1,0 +1,62 @@
+---
+import Base from '../layouts/Base.astro';
+import { loadSite } from '../lib/data';
+const site = loadSite();
+---
+<Base title="Specimen not found" description="This page does not exist.">
+  <div class="wrap nf">
+    <p class="nf__code mono">Error 404 · Sample missing from the collection</p>
+    <h1 class="nf__t">Specimen <em>not found</em></h1>
+    <p class="nf__b">{site.notFound.text}</p>
+    <p class="nf__links">
+      <a class="label" href="/">Latest issue →</a>
+      <a class="label" href="/issues/">The archive →</a>
+    </p>
+    <span class="nf__g" aria-hidden="true">?</span>
+  </div>
+</Base>
+
+<style>
+  .nf {
+    position: relative;
+    padding-block: clamp(3rem, 8vw, 7rem);
+    overflow: hidden;
+    min-height: 60vh;
+  }
+  .nf__code {
+    margin: 0 0 1.4rem;
+    color: var(--accent-text);
+  }
+  .nf__t {
+    font-size: clamp(3.2rem, 2rem + 6vw, 8rem);
+    font-weight: 400;
+    max-width: 10ch;
+    line-height: 0.95;
+  }
+  .nf__b {
+    max-width: 44ch;
+    margin: 1.6rem 0;
+    font-size: 1.2rem;
+  }
+  .nf__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+  .nf__links a {
+    color: var(--accent-text);
+    text-decoration: none;
+  }
+  .nf__g {
+    position: absolute;
+    right: -0.05em;
+    bottom: -0.25em;
+    font-family: var(--f-display);
+    font-style: italic;
+    font-size: clamp(14rem, 40vw, 34rem);
+    line-height: 1;
+    color: var(--accent);
+    opacity: 0.12;
+    z-index: -1;
+  }
+</style>

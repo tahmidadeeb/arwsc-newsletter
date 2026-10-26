@@ -1,0 +1,76 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Tag from '../components/Tag.astro';
+import { loadSegments, loadSite } from '../lib/data';
+
+const site = loadSite();
+const segments = loadSegments();
+const blurbs: Record<string, string> = {
+  standard: 'Long-form reporting and essays on research.',
+  opinion: 'Arguments and perspectives from members.',
+  frontier: 'Short dispatches on recent breakthroughs.',
+  notice: 'News, events and calls from the club.',
+};
+---
+<Base title="About the club" description={site.about.intro.slice(0, 200)} ogImage="/og/about.png">
+  <div class="wrap">
+    <PageHead kicker={site.clubName} title="About" lede={site.about.intro} />
+    <div class="about">
+      <div class="about__body">
+        {site.about.body.map((p) => <p>{p}</p>)}
+      </div>
+      {segments.length > 0 && (
+        <aside class="about__segs" aria-labelledby="segs-h">
+          <h2 id="segs-h" class="label about__h">What the newsletter publishes</h2>
+          <ul>
+            {segments.map((s, i) => (
+              <li>
+                <Tag label={s.label} index={i + 1} />
+                {(s.description ?? blurbs[s.treatment]) && <p>{s.description ?? blurbs[s.treatment]}</p>}
+              </li>
+            ))}
+          </ul>
+        </aside>
+      )}
+    </div>
+  </div>
+</Base>
+
+<style>
+  .about {
+    display: grid;
+    gap: 3rem;
+    padding-top: clamp(2rem, 4vw, 3.5rem);
+  }
+  @media (min-width: 60rem) {
+    .about {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+      gap: 5rem;
+    }
+  }
+  .about__body {
+    max-width: var(--measure);
+    font-size: 1.15rem;
+  }
+  .about__body p {
+    margin: 0 0 1.1em;
+  }
+  .about__h {
+    margin: 0 0 1rem;
+    padding-bottom: 0.7rem;
+    border-bottom: 1px solid var(--ink);
+  }
+  .about__segs ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.3rem;
+  }
+  .about__segs p {
+    margin: 0.5rem 0 0;
+    color: var(--ink-soft);
+    font-size: 1rem;
+  }
+</style>

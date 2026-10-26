@@ -1,0 +1,46 @@
+---
+interface Props {
+  title: string;
+  body: string;
+  glyph?: string;
+}
+const { title, body, glyph = '§' } = Astro.props;
+---
+<section class="empty">
+  <span class="empty__g" aria-hidden="true">{glyph}</span>
+  <div>
+    <h2 class="empty__t">{title}</h2>
+    <p class="empty__b">{body}</p>
+    <slot />
+  </div>
+</section>
+
+<style>
+  .empty {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: clamp(1rem, 4vw, 3rem);
+    align-items: center;
+    padding: clamp(2rem, 6vw, 5rem) 0;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    margin-top: 2rem;
+  }
+  .empty__g {
+    font-family: var(--f-display);
+    font-style: italic;
+    font-size: clamp(6rem, 18vw, 14rem);
+    line-height: 0.8;
+    color: var(--accent);
+  }
+  .empty__t {
+    font-size: clamp(1.8rem, 1.3rem + 2vw, 3rem);
+    font-style: italic;
+    font-weight: 400;
+  }
+  .empty__b {
+    margin: 0.8rem 0 0;
+    max-width: 40ch;
+    color: var(--ink-soft);
+  }
+</style>

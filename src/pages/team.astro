@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import TeamGrid from '../components/TeamGrid.astro';
+import EmptyState from '../components/EmptyState.astro';
+import { loadSite, loadTeam } from '../lib/data';
+
+const team = loadTeam();
+const site = loadSite();
+---
+<Base title="Editorial team" description="The students, faculty and alumni who edit the arw,sc newsletter." ogImage="/og/team.png">
+  <div class="wrap">
+    <PageHead kicker="Masthead" title="Editorial team" lede={site.team.intro} />
+    <div class="team-wrap">
+      {team.length > 0 ? (
+        <TeamGrid members={team} />
+      ) : (
+        <EmptyState title="The editorial team will be listed here" body="Team members are added in the team.yaml file." />
+      )}
+    </div>
+  </div>
+</Base>
+
+<style>
+  .team-wrap {
+    padding-top: clamp(2rem, 4vw, 3rem);
+  }
+</style>

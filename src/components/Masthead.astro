@@ -1,0 +1,172 @@
+---
+import { Image } from 'astro:assets';
+import mark from '../assets/arwsc-mark.png';
+import { NAV, SITE_TITLE } from '../lib/nav';
+import { loadSite } from '../lib/data';
+
+interface Props {
+  variant: 'home' | 'compact';
+  /** e.g. "Vol. I · Issue No. 12 · October 2026" */
+  issueLine?: string;
+}
+const { variant, issueLine } = Astro.props;
+const path = Astro.url.pathname;
+const current = (href: string) =>
+  href === '/' ? path === '/' : path === href || path.startsWith(href);
+const Title = variant === 'home' ? 'h1' : 'p';
+const { clubName } = loadSite();
+---
+<header class:list={['mast', `mast--${variant}`]}>
+  <div class="wrap">
+    <div class="mast__top">
+      <span class="mast__line mono">{issueLine ?? clubName}</span>
+      <nav class="mast__nav" aria-label="Main">
+        <ul>
+          {NAV.map((n) => (
+            <li>
+              <a href={n.href} aria-current={current(n.href) ? 'page' : undefined}>{n.label}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+    {variant === 'home' ? (
+      <>
+        <hr class="rule rule--double rule-draw" style="--i:0" />
+        <Title class="mast__title reveal" style="--i:1">
+          <a href="/" class="mast__link">
+            <Image src={mark} alt="" width={120} class="mast__mark" loading="eager" />
+            <span class="mast__words"><span>the arw,sc</span> <span>newsletter</span></span>
+          </a>
+        </Title>
+        <div class="mast__sub reveal" style="--i:2">
+          <span class="label">{clubName}</span>
+        </div>
+        <hr class="rule rule-draw" style="--i:2" />
+      </>
+    ) : (
+      <div class="mast__bar">
+        <a href="/" class="mast__link mast__link--compact">
+          <Image src={mark} alt="" width={64} class="mast__mark" loading="eager" />
+          <span class="mast__wordmark">{SITE_TITLE}</span>
+        </a>
+      </div>
+    )}
+    {variant === 'compact' && <hr class="rule rule--double mast__under" />}
+  </div>
+</header>
+
+<style>
+  .mast {
+    padding-top: 0.9rem;
+  }
+  .mast__top {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.5rem;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: 0.7rem;
+  }
+  .mast__line {
+    color: var(--ink-soft);
+    font-size: 0.75rem;
+  }
+  .mast__nav ul {
+    display: flex;
+    gap: 0.25rem 1.35rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex-wrap: wrap;
+  }
+  .mast__nav a {
+    font-family: var(--f-label);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    padding-block: 0.35rem;
+    border-bottom: 1px solid transparent;
+  }
+  .mast__nav a:hover,
+  .mast__nav a[aria-current='page'] {
+    border-bottom-color: var(--accent-text);
+    color: var(--accent-text);
+  }
+
+  /* Home: the big wordmark */
+  .mast__title {
+    margin: clamp(0.8rem, 2vw, 1.6rem) 0 0.4rem;
+    font-weight: 400;
+    font-style: italic;
+    line-height: 0.86;
+    letter-spacing: -0.035em;
+    font-size: clamp(3.4rem, 8vw, 7.4rem);
+  }
+  .mast__link {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: clamp(0.6rem, 1.6vw, 1.4rem);
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .mast__link:hover {
+    color: var(--ink);
+  }
+  .mast--home .mast__mark {
+    width: 0.78em;
+    height: auto;
+    flex: none;
+    margin-bottom: 0.04em;
+  }
+  .mast__words {
+    white-space: nowrap;
+  }
+  .mast__sub {
+    padding: 0.9rem 0 0.75rem;
+    text-align: center;
+  }
+
+  /* Compact bar */
+  .mast__bar {
+    padding: 0.35rem 0 0.75rem;
+    border-top: 1px solid var(--ink);
+  }
+  .mast__link--compact {
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.7rem;
+    width: fit-content;
+  }
+  .mast__link--compact .mast__mark {
+    width: 2.1rem;
+  }
+  .mast__wordmark {
+    font-family: var(--f-display);
+    font-style: italic;
+    font-size: clamp(1.45rem, 1.1rem + 1.4vw, 2.2rem);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .mast__under {
+    margin: 0;
+  }
+
+  @media (max-width: 40rem) {
+    .mast__words {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      white-space: normal;
+    }
+    .mast--home .mast__mark {
+      width: 1.1em;
+      align-self: center;
+    }
+    .mast__nav ul {
+      gap: 0 1rem;
+    }
+  }
+</style>

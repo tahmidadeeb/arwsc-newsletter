@@ -1,0 +1,113 @@
+---
+import Base from '../layouts/Base.astro';
+import Cover from '../components/Cover.astro';
+import Toc from '../components/Toc.astro';
+import SegmentBlock from '../components/SegmentBlock.astro';
+import EmptyState from '../components/EmptyState.astro';
+import Signup from '../components/Signup.astro';
+import EditorsNote from '../components/EditorsNote.astro';
+import { getIssue, getIssues, getLatest } from '../lib/content';
+import { blocksAfterLead } from '../lib/ordering';
+import { themeStyle } from '../lib/theme';
+import { loadSite } from '../lib/data';
+import { SITE_TITLE } from '../lib/nav';
+
+const latest = await getLatest();
+const issues = await getIssues();
+const site = loadSite();
+const earlier = await Promise.all(issues.slice(1, 4).map((i) => getIssue(i.folder)));
+const blocks = latest ? blocksAfterLead(latest.groups, latest.lead?.slug) : [];
+const leadAnchor = latest?.lead && !blocks.some((b) => b.segment.key === latest.lead!.segment) ? latest.lead.segment : undefined;
+const issueLine = latest ? `Issue No. ${latest.issue.issueNumber} · ${latest.issue.monthLabel}` : undefined;
+---
+<Base
+  title={SITE_TITLE}
+  description={latest ? `${latest.issue.title} — ${site.tagline}` : site.tagline}
+  theme={latest?.issue.theme}
+  masthead="home"
+  issueLine={issueLine}
+  ogImage={latest ? (latest.issue.cover?.src.src ?? `/og/issues/${latest.issue.folder}.png`) : '/og/home.png'}
+>
+  <div class="wrap">
+    {latest ? (
+      <>
+        <Cover issue={latest.issue} lead={latest.lead} size="hero" level="h2" linkIssue leadAnchor={leadAnchor} />
+
+        <div class:list={['front', latest.issue.hasNote && 'front--note']}>
+          {latest.issue.hasNote && <EditorsNote issue={latest.issue} excerpt />}
+          <Toc groups={latest.groups} />
+        </div>
+
+        {blocks.map((g, i) => (
+          <SegmentBlock segment={g.segment} articles={g.articles} index={i + 1} />
+        ))}
+      </>
+    ) : (
+      <EmptyState title="The first issue is in preparation" body="The newsletter's first issue will appear here soon. Sign up below to hear when it is published." glyph="¶" />
+    )}
+  </div>
+
+  <div class="wrap">
+    <Signup variant="band" id="signup-home" />
+  </div>
+
+  {earlier.length > 0 && (
+    <section class="wrap earlier" aria-labelledby="earlier-h">
+      <header class="earlier__head">
+        <h2 id="earlier-h" class="earlier__h">From the archive</h2>
+        <a class="label earlier__all" href="/issues/">All issues →</a>
+      </header>
+      <ul class="earlier__grid">
+        {earlier.map((b) => b && (
+          <li class="themed" style={themeStyle(b.issue.theme)}>
+            <Cover issue={b.issue} size="card" level="h3" articleCount={b.articles.length} />
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+</Base>
+
+<style>
+  .front {
+    display: grid;
+    gap: 2.5rem;
+    align-items: start;
+    padding-top: clamp(2.5rem, 5vw, 4rem);
+  }
+  @media (min-width: 60rem) {
+    .front--note {
+      grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+      gap: 3.5rem;
+    }
+  }
+  .earlier {
+    padding-top: clamp(3rem, 6vw, 5rem);
+  }
+  .earlier__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 1rem;
+    margin-bottom: 1.6rem;
+  }
+  .earlier__h {
+    font-size: clamp(1.9rem, 1.3rem + 2.2vw, 3.1rem);
+    font-weight: 400;
+    font-style: italic;
+  }
+  .earlier__all {
+    color: var(--accent-text);
+    text-decoration: none;
+  }
+  .earlier__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.6rem;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr));
+  }
+</style>

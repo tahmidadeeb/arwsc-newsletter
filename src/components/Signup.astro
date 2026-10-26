@@ -1,0 +1,239 @@
+---
+/**
+ * Email signup (Kit). Reads the public form ID from PUBLIC_KIT_FORM_ID.
+ * Without it, shows a "Signups opening soon" state instead of a form.
+ */
+import { kitAction } from '../scripts/signup-core';
+import { loadSite } from '../lib/data';
+
+interface Props {
+  variant: 'band' | 'footer';
+  id: string;
+}
+const { variant, id } = Astro.props;
+const formId = (import.meta.env.PUBLIC_KIT_FORM_ID ?? '').trim();
+const open = formId.length > 0;
+const t = loadSite().signup;
+---
+<section class:list={['su', `su--${variant}`]} aria-labelledby={`${id}-h`}>
+  <div class="su__intro">
+    {variant === 'band' && <p class="label su__k">The newsletter</p>}
+    <h2 id={`${id}-h`} class="su__h">{variant === 'band' ? t.heading : t.footerHeading}</h2>
+    <p class="su__p">
+      {open ? t.text : t.comingSoon}
+    </p>
+  </div>
+
+  {open ? (
+    <form class="su__form" method="post" action={kitAction(formId)} novalidate data-signup data-success={t.success}>
+      <div class="su__row">
+        <label class="sr-only" for={`${id}-email`}>Email address</label>
+        <input
+          class="su__input"
+          id={`${id}-email`}
+          type="email"
+          name="email_address"
+          autocomplete="email"
+          inputmode="email"
+          placeholder="you@example.com"
+          required
+          aria-describedby={`${id}-status ${id}-privacy`}
+        />
+        <button class="su__btn" type="submit">Subscribe</button>
+      </div>
+      <div class="su__hp" aria-hidden="true">
+        <label for={`${id}-website`}>Leave this field empty</label>
+        <input id={`${id}-website`} type="text" name="website" tabindex="-1" autocomplete="off" />
+      </div>
+      <p class="su__status" id={`${id}-status`} role="status" aria-live="polite"></p>
+      <p class="su__privacy" id={`${id}-privacy`}>{t.privacy}</p>
+    </form>
+  ) : (
+    <div class="su__soon">
+      <p class="su__soontag mono">Signups opening soon</p>
+    </div>
+  )}
+</section>
+
+<script>
+  import { submitSignup } from '../scripts/signup-core';
+
+  const MESSAGES = {
+    invalid: 'Please enter a complete email address, like name@example.com.',
+    error: 'Something went wrong on our side. Please try again in a moment.',
+    success: 'Almost there — check your inbox and click the link to confirm your subscription.',
+    sending: 'Sending…',
+  } as const;
+
+  for (const form of document.querySelectorAll<HTMLFormElement>('form[data-signup]')) {
+    form.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const status = form.querySelector<HTMLElement>('[role="status"]')!;
+      const email = form.querySelector<HTMLInputElement>('input[name="email_address"]')!;
+      const hp = form.querySelector<HTMLInputElement>('input[name="website"]')!;
+      const button = form.querySelector<HTMLButtonElement>('button')!;
+      form.dataset.state = 'sending';
+      status.textContent = MESSAGES.sending;
+      button.disabled = true;
+      const result = await submitSignup({ email: email.value, honeypot: hp.value, action: form.action });
+      button.disabled = false;
+      if (result === 'fallback') {
+        // The browser blocked the background request: submit normally instead.
+        hp.disabled = true;
+        HTMLFormElement.prototype.submit.call(form);
+        return;
+      }
+      const shown = result === 'spam' ? 'success' : result;
+      form.dataset.state = shown;
+      status.textContent = shown === 'success' ? (form.dataset.success ?? MESSAGES.success) : MESSAGES[shown];
+      email.setAttribute('aria-invalid', String(result === 'invalid'));
+      if (shown === 'success') email.value = '';
+      if (result === 'invalid') email.focus();
+    });
+  }
+</script>
+
+<style>
+  .su {
+    display: grid;
+    gap: 1.4rem 3rem;
+    align-items: end;
+  }
+  .su--band {
+    margin-top: clamp(3.5rem, 7vw, 6rem);
+    padding: clamp(1.8rem, 4vw, 3rem);
+    background: var(--accent);
+    color: var(--on-accent);
+    position: relative;
+    overflow: hidden;
+  }
+  @media (min-width: 56rem) {
+    .su--band {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    }
+  }
+  .su--band::after {
+    content: "@";
+    position: absolute;
+    right: -0.08em;
+    top: -0.32em;
+    font-family: var(--f-display);
+    font-style: italic;
+    font-size: clamp(12rem, 26vw, 22rem);
+    line-height: 1;
+    opacity: 0.1;
+    pointer-events: none;
+  }
+  .su__k {
+    margin: 0 0 0.6rem;
+    opacity: 0.85;
+  }
+  .su__h {
+    font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.6rem);
+    font-style: italic;
+    font-weight: 400;
+  }
+  .su--footer .su__h {
+    font-size: 1.6rem;
+  }
+  .su__p {
+    margin: 0.6rem 0 0;
+    opacity: 0.9;
+    max-width: 42ch;
+  }
+  .su__form {
+    position: relative;
+    z-index: 1;
+  }
+  .su__row {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid currentColor;
+  }
+  .su__input {
+    flex: 1;
+    min-width: 0;
+    padding: 0.8rem 0.2rem;
+    font: inherit;
+    font-size: 1.15rem;
+    color: inherit;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+  }
+  .su__input::placeholder {
+    color: currentColor;
+    opacity: 0.6;
+  }
+  .su__input:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+  .su__input[aria-invalid='true'] {
+    text-decoration: underline wavy;
+    text-decoration-thickness: 1px;
+  }
+  .su__btn {
+    padding: 0.7rem 1.2rem;
+    font-family: var(--f-label);
+    font-weight: 700;
+    font-size: 0.8125rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--on-accent);
+    border: 0;
+    border-radius: 0;
+    cursor: pointer;
+    margin-bottom: 0.4rem;
+  }
+  .su--footer .su__btn {
+    color: var(--ink);
+    background: var(--paper);
+  }
+  .su__btn:hover {
+    filter: brightness(0.95);
+  }
+  .su__btn:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
+  .su__btn:disabled {
+    opacity: 0.6;
+    cursor: progress;
+  }
+  .su__hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .su__status {
+    min-height: 1.5em;
+    margin: 0.7rem 0 0;
+    font-family: var(--f-label);
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
+  .su__status:empty {
+    min-height: 0;
+  }
+  .su__privacy {
+    margin: 0.5rem 0 0;
+    font-family: var(--f-label);
+    font-size: 0.8125rem;
+    opacity: 0.85;
+  }
+  .su__soon {
+    position: relative;
+    z-index: 1;
+  }
+  .su__soontag {
+    display: inline-block;
+    margin: 0;
+    padding: 0.55rem 0.9rem;
+    border: 1px dashed currentColor;
+    font-size: 0.8125rem;
+  }
+</style>

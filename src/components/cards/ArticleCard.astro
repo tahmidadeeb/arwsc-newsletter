@@ -1,0 +1,66 @@
+---
+import { headlineHtml } from '../../lib/format';
+import { Image } from 'astro:assets';
+import type { Article } from '../../lib/content';
+import { articleUrl } from '../../lib/nav';
+import Byline from '../Byline.astro';
+
+interface Props {
+  article: Article;
+  level?: 'h3' | 'h4';
+  showImage?: boolean;
+}
+const { article: a, level = 'h3', showImage = true } = Astro.props;
+const H = level;
+---
+<article class="card has-stretch card-lift">
+  {showImage && a.hero && (
+    <div class="card__img">
+      <Image src={a.hero.src} alt="" widths={[400, 640, 900]} sizes="(min-width: 64rem) 30vw, (min-width: 40rem) 45vw, 100vw" />
+    </div>
+  )}
+  <H class="card__t">
+    <a class="stretch hover-title" href={articleUrl(a.issue, a.slug)} set:html={headlineHtml(a.title)} />
+  </H>
+  <p class="card__s">{a.dek ?? a.summary}</p>
+  <Byline authors={a.authors} max={3} />
+</article>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--ink);
+    min-width: 0;
+  }
+  .card__img {
+    overflow: hidden;
+    aspect-ratio: 3 / 2;
+    background: var(--paper-deep);
+  }
+  .card__img :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .card__t {
+    font-size: clamp(1.35rem, 1.1rem + 0.8vw, 1.75rem);
+    line-height: 1.08;
+    overflow-wrap: anywhere;
+  }
+  .card__t a {
+    text-decoration: none;
+  }
+  .card__s {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 1rem;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>
