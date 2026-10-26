@@ -1,6 +1,5 @@
 ---
 title: "No More Inhalers for Asthma Patients; First-in-Human Research Finds Inhaled RNA Therapy to Be Safe"
-authors: Science Club, Rajshahi Medical College
 segment: frontier
 order: 17
 summary: "In a first-in-human trial, the experimental inhaled siRNA therapy ARO-RAGE was well tolerated and reduced biomarkers indicating successful targeting of RAGE in the lungs."

@@ -117,3 +117,37 @@ describe('"In this issue" list', () => {
     });
   }
 });
+
+describe('Frontier entries show no authors', () => {
+  it('has no author line on Frontier dispatches', () => {
+    const doc = parse(site.html('issues/2026-10'));
+    const seg = doc.querySelector('.seg--frontier')!;
+    expect(seg.querySelectorAll('.dp__meta')).toHaveLength(0);
+    expect(seg.text).not.toContain('Ana Rahman');
+  });
+  it('has no byline or author facts on a Frontier article page, even if the file still names an author', () => {
+    const doc = parse(site.html('issues/2026-10/f1'));
+    expect(doc.querySelectorAll('main .byline')).toHaveLength(0);
+    expect(doc.querySelector('main')!.text).not.toContain('Ana Rahman');
+    expect(doc.querySelector('meta[property="article:author"]')).toBeNull();
+  });
+  it('still shows authors on other articles', () => {
+    expect(parse(site.html('issues/2026-10/o1')).querySelector('main .byline')!.text).toContain('Ana Rahman');
+  });
+  it('shows no authors when the next article link points to a Frontier entry', () => {
+    const doc = parse(site.html('issues/2026-10/f1'));
+    const nx = doc.querySelector('.nx')!;
+    expect(nx.text).not.toContain('Ana Rahman');
+  });
+});
+
+describe('logos', () => {
+  it('shows the Science Club logo beside the arw,sc logo in the footer', () => {
+    const imgs = parse(site.html('')).querySelectorAll('footer .foot__logos img');
+    expect(imgs.map((i) => i.getAttribute('alt'))).toEqual(['Science Club, Rajshahi Medical College', 'arw,sc']);
+  });
+  it('shows the Science Club logo above the arw,sc logo on the About page', () => {
+    const imgs = parse(site.html('about')).querySelectorAll('.about__logos img');
+    expect(imgs.map((i) => i.getAttribute('alt'))).toEqual(['Science Club, Rajshahi Medical College', 'arw,sc']);
+  });
+});

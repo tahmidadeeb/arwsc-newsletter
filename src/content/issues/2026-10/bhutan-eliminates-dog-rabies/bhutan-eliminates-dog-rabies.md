@@ -1,6 +1,5 @@
 ---
 title: "Bhutan Eliminates Dog-Transmitted Human Rabies as the First Country in South-East Asia"
-authors: Science Club, Rajshahi Medical College
 segment: frontier
 order: 15
 summary: "The WHO validated Bhutan’s elimination of dog-mediated human rabies as a public-health problem, making it the first country in the WHO South-East Asia Region to achieve this milestone."

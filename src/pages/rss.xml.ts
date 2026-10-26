@@ -25,7 +25,7 @@ export const GET: APIRoute = async (context) => {
       link: articleUrl(a.issue, a.slug),
       pubDate: a.date,
       description: a.dek ?? a.summary,
-      author: a.authors.join(', '),
+      ...(a.authors.length > 0 ? { author: a.authors.join(', ') } : {}),
       categories: [segmentFor(a.segment)?.label ?? a.segment],
     })),
     customData: '<language>en</language>',

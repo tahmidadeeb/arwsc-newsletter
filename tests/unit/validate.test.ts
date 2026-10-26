@@ -72,6 +72,22 @@ describe('validateContent — errors in plain language', () => {
   });
 });
 
+describe('validateContent — Frontier authors', () => {
+  it('does not require authors on a Frontier entry', async () => {
+    const r = await validateContent(await oneArticle(article({ segment: 'frontier', authors: undefined })));
+    expect(r.errors).toEqual([]);
+    expect(r.warnings).toEqual([]);
+  });
+  it('warns that authors on a Frontier entry are not shown', async () => {
+    const r = await validateContent(await oneArticle(article({ segment: 'frontier' })));
+    expect(r.errors).toEqual([]);
+    expect(r.warnings.map((w) => w.message).join()).toMatch(/Frontier.*not shown/);
+  });
+  it('still requires authors on other sections', async () => {
+    expect(await errorsFor(await oneArticle(article({ authors: undefined })))).toContain('authors');
+  });
+});
+
 describe('validateContent — article order', () => {
   const two = (a: Record<string, string | undefined>, b: Record<string, string | undefined>) =>
     makeContent({

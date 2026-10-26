@@ -18,7 +18,7 @@ const seg = next ? segmentFor(next.segment) : undefined;
       <p class="label nx__k">Next in this issue{seg && <span class="nx__seg"> · {seg.label}</span>}</p>
       <p class="nx__t"><a class="stretch hover-title" href={articleUrl(next.issue, next.slug)} set:html={headlineHtml(next.title)} /></p>
       <p class="nx__s">{next.summary}</p>
-      <p class="nx__by">{formatAuthors(next.authors.slice(0, 3))}{next.authors.length > 3 ? ' et al.' : ''} <span aria-hidden="true" class="nx__arrow">→</span></p>
+      <p class="nx__by">{next.authors.length > 0 && `${formatAuthors(next.authors.slice(0, 3))}${next.authors.length > 3 ? ' et al.' : ''} `}<span aria-hidden="true" class="nx__arrow">→</span></p>
     </>
   ) : (
     <>

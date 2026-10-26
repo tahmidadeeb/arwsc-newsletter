@@ -1,6 +1,6 @@
 ---
 title: "Dengue Beyond the Calendar"
-authors: Afia Mahin Raisa
+authors: Afia Mahin Raisa (65th MBBS)
 segment: feature
 order: 6
 summary: "Although dengue remains strongly seasonal, the traditional monsoon-centred calendar may no longer be sufficient for predicting risk. Bangladesh may therefore need to move from a predominantly outbreak-response model towards continuous surveillance, early warning and sustained vector control."

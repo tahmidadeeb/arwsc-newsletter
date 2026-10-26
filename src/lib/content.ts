@@ -77,7 +77,8 @@ function toArticle(entry: CollectionEntry<'articles'>): Article {
     slug,
     issue,
     title: d.title,
-    authors: d.authors,
+    // Frontier dispatches are unsigned: their authors are never shown.
+    authors: segments().find((s) => s.key === d.segment)?.treatment === 'frontier' ? [] : d.authors,
     segment: d.segment,
     // Not shown to readers; used for the RSS feed and search engines.
     date: d.date ?? folderToDate(issue),

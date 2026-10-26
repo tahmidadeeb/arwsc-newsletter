@@ -60,7 +60,7 @@ _template/new-issue/issue.md    ← the issue template (with a space for the edi
 
 In an article's header: `featured: true` makes it the issue's **lead story** (if several are featured, the one with the lowest `order` wins). Without it, the lead is the article with the lowest `order`; Club Announcements are skipped unless the issue has nothing else. `order: 1, 2, 3…` sets its position within its section; this is the only thing that decides article order (dates play no part). Give every article in a section its own number. Articles without one go after the numbered ones, alphabetically by title, and the build warns about missing or repeated numbers. `draft: true` hides it.
 
-**What readers see.** Articles show no dates and no article numbers: not on cards, in the "In this issue" list, on Frontier dispatches, on announcements or on the article page. An article's `date` is optional and only goes to the RSS feed and search engines (without one, the 1st of the issue's month is used). The "In this issue" list on the cover page shows every section except The Frontier (any section with `treatment: frontier`); Frontier dispatches appear only in their own section further down. Sections are numbered 01, 02… in the order of `segments.yaml`, and issues are labelled in full, e.g. "Issue No. 2 · October 2026".
+**What readers see.** Articles show no dates and no article numbers: not on cards, in the "In this issue" list, on Frontier dispatches, on announcements or on the article page. An article's `date` is optional and only goes to the RSS feed and search engines (without one, the 1st of the issue's month is used). The "In this issue" list on the cover page shows every section except The Frontier (any section with `treatment: frontier`); Frontier dispatches appear only in their own section further down, and never show author names, on the issue page or on their own page (leave `authors` out of Frontier files; if it is left in, the build warns and ignores it). Write authors' batches in brackets after their names, e.g. `Ana Rahman (65th MBBS)`. The footer and the About page show the Science Club logo next to the arw,sc logo; the files are `src/assets/science-club-logo.png` and `src/assets/arwsc-logo.png`. Sections are numbered 01, 02… in the order of `segments.yaml`, and issues are labelled in full, e.g. "Issue No. 2 · October 2026".
 
 ## 4. Colour themes
 
@@ -92,7 +92,7 @@ The site checks readability automatically:
 ## 5. Sections, team, and club details
 
 - **Sections:** edit `src/data/segments.yaml`. Each entry has a `key` (what authors write in `segment:`), a `label` (the heading readers see), an `order`, and a `treatment` (the visual style: `standard`, `opinion`, `frontier` or `notice`). Add, rename, reorder or delete entries; no code changes are needed. If an article uses a key that no longer exists, the build stops and lists the valid keys. A section with no articles in an issue simply doesn't appear.
-- **Editorial team:** edit `src/data/team.yaml`. Each person needs `name` and `role`, and may have `bio` and `photo`. For a photo, upload it to `public/team/` and write `photo: /team/file-name.jpg`.
+- **Editorial team:** edit `src/data/team.yaml`. Each person needs `name` and `role`, and may have `bio` and `photo`. Write the batch after the name, e.g. `name: Tahmid Adeeb (64th MBBS)`. For a photo, upload it to `public/team/` and write `photo: /team/file-name.jpg`.
 - **Club details:** `src/data/site.yaml` holds the contact email, social links, About text and joining text.
 
 ### Changing any text on the website

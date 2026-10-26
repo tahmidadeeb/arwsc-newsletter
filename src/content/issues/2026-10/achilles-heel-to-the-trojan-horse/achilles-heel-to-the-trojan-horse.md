@@ -1,6 +1,6 @@
 ---
 title: "Achilles’ Heel to the Trojan Horse: Daraxonrasib and the Evolving Battle Against KRAS-Driven Pancreatic Cancer"
-authors: Md. Israq Hossain
+authors: Md. Israq Hossain (65th MBBS)
 segment: feature
 order: 3
 summary: "Has the “undruggable KRAS of Pancreatic Cancer” finally met its match?"

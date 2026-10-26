@@ -1,6 +1,5 @@
 ---
 title: "One Step Closer in Understanding Alzheimer’s Disease More"
-authors: Science Club, Rajshahi Medical College
 segment: frontier
 order: 11
 summary: "Researchers created detailed, single-cell molecular maps of Alzheimer’s and related brain disorders, revealing cellular and molecular changes associated with disease."

@@ -3,9 +3,10 @@
 # Put any text that contains a colon (:) or a hash (#) inside "double quotes".
 title: "Example: How to Write for the Newsletter"
 # One name, or a list (each on its own line starting with "  - ").
+# Put the batch in brackets after each name. Frontier entries: delete authors.
 authors:
-  - Ana Rahman
-  - Bo Chen
+  - Ana Rahman (65th MBBS)
+  - Bo Chen (66th MBBS)
 # One of: announcements, feature, opinion, frontier
 segment: feature
 # One or two sentences. Shown on cards, in search results and the RSS feed.

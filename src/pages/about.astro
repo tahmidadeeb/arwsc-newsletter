@@ -2,7 +2,10 @@
 import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
 import Tag from '../components/Tag.astro';
+import { Image } from 'astro:assets';
 import { loadSegments, loadSite } from '../lib/data';
+import clubLogo from '../assets/science-club-logo.png';
+import logo from '../assets/arwsc-logo.png';
 
 const site = loadSite();
 const segments = loadSegments();
@@ -15,7 +18,12 @@ const blurbs: Record<string, string> = {
 ---
 <Base title="About the club" description={site.about.intro.slice(0, 200)} ogImage="/og/about.png">
   <div class="wrap">
-    <PageHead kicker={site.clubName} title="About" lede={site.about.intro} />
+    <PageHead kicker={site.clubName} title="About" lede={site.about.intro}>
+      <div slot="aside" class="about__logos">
+        <Image src={clubLogo} alt="Science Club, Rajshahi Medical College" width={320} class="about__club-logo" />
+        <Image src={logo} alt="arw,sc" width={640} class="about__logo" />
+      </div>
+    </PageHead>
     <div class="about">
       <div class="about__body">
         {site.about.body.map((p) => <p>{p}</p>)}
@@ -38,6 +46,20 @@ const blurbs: Record<string, string> = {
 </Base>
 
 <style>
+  .about__logos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(1.25rem, 3vw, 2rem);
+  }
+  .about__club-logo {
+    width: clamp(8rem, 22vw, 11rem);
+    height: auto;
+  }
+  .about__logo {
+    width: min(18rem, 100%);
+    height: auto;
+  }
   .about {
     display: grid;
     gap: 3rem;

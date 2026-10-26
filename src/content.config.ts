@@ -55,7 +55,7 @@ const articles = defineCollection({
     z
       .object({
         title: z.string().min(1),
-        authors: z.union([z.string().min(1), z.array(z.string().min(1)).min(1)]).transform(toArray),
+        authors: z.union([z.string().min(1), z.array(z.string().min(1)).min(1)]).transform(toArray).default([]),
         segment: z.string().min(1),
         date: z.coerce.date().optional(),
         summary: z.string().min(1),

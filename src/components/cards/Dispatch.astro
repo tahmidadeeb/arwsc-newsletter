@@ -1,7 +1,6 @@
 ---
 import { headlineHtml } from '../../lib/format';
 import type { Article } from '../../lib/content';
-import { formatAuthors } from '../../lib/format';
 import { articleUrl } from '../../lib/nav';
 
 interface Props {
@@ -15,7 +14,6 @@ const { article: a } = Astro.props;
       <a class="stretch hover-title" href={articleUrl(a.issue, a.slug)} set:html={headlineHtml(a.title)} />
     </h3>
     <p class="dp__s">{a.summary}</p>
-    <p class="dp__meta mono">{formatAuthors(a.authors.slice(0, 3))}{a.authors.length > 3 ? ' et al.' : ''}</p>
   </div>
 </article>
 
@@ -40,11 +38,6 @@ const { article: a } = Astro.props;
   .dp__s {
     margin: 0.45rem 0 0.5rem;
     font-size: 1rem;
-    color: var(--ink-soft);
-  }
-  .dp__meta {
-    margin: 0;
-    font-size: 0.75rem;
     color: var(--ink-soft);
   }
 </style>

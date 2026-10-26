@@ -1,9 +1,9 @@
 ---
 title: "More Than Medicine: Lessons from the Unwritten Pages"
 authors:
-  - Tahsin Ara Mim
-  - Tahsin Tahiat
-  - Tasmia Akhter Prappo
+  - Tahsin Ara Mim (65th MBBS)
+  - Tahsin Tahiat (65th MBBS)
+  - Tasmia Akhter Prappo (66th MBBS)
 segment: opinion
 order: 7
 summary: "Medical schools teach us how to diagnose diseases, yet no textbook teaches us the education of human experience."

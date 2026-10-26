@@ -1,6 +1,5 @@
 ---
 title: "Nanobody Targeting Ascitic Fluid Can Treat Peritoneal Metastases with Lesser Toxicity"
-authors: Science Club, Rajshahi Medical College
 segment: frontier
 order: 16
 summary: "Singaporean researchers identified cancer-promoting proteins in ascitic fluid and developed a nanobody, E8, targeting PAI-1."

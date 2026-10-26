@@ -24,7 +24,7 @@ The top of the file, between the two `---` lines, holds the article's details.
 | Field | What to write |
 |---|---|
 | `title` | The headline. |
-| `authors` | One name (`authors: Ana Rahman`), or a list with one name per line, each starting with two spaces, a dash and a space (`  - Ana Rahman`). |
+| `authors` | One name (`authors: Ana Rahman (65th MBBS)`), or a list with one name per line, each starting with two spaces, a dash and a space (`  - Ana Rahman (65th MBBS)`). Add your batch in brackets after your name, exactly as it should appear. **Frontier entries have no authors:** leave this line out for `segment: frontier`. |
 | `segment` | The section: `announcements`, `feature`, `opinion` or `frontier` (exactly as written). |
 | `summary` | One or two sentences describing the article. |
 
@@ -39,7 +39,7 @@ The top of the file, between the two `---` lines, holds the article's details.
 | `date` | Not shown anywhere on the site and not needed. If you add one, write it as year-month-day, e.g. `2026-11-05` (formats such as `05/11/2026` are rejected because they are ambiguous); it is only passed to feed readers and search engines. |
 | `featured`, `order`, `draft`, `issue` | Set by the editors. Leave these out. |
 
-**What readers see.** Each article shows its title, authors, summary (and teaser, if any) and its section. Articles show **no dates and no article numbers**; the only numbers on the page are the section numbers (01, 02…) and the issue label, e.g. "Issue No. 2 · October 2026". The editors decide the order of articles within each section. Frontier dispatches are not listed under "In this issue"; they appear only in The Frontier section.
+**What readers see.** Each article shows its title, authors (with their batch), summary (and teaser, if any) and its section. Articles show **no dates and no article numbers**; the only numbers on the page are the section numbers (01, 02…) and the issue label, e.g. "Issue No. 2 · October 2026". The editors decide the order of articles within each section. Frontier dispatches are not listed under "In this issue"; they appear only in The Frontier section, with no author names.
 
 **Quoting rule.** If a value contains a colon `:` or a `#`, put the whole value in double quotes:
 

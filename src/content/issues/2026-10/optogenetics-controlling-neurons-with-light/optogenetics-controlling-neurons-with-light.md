@@ -1,6 +1,6 @@
 ---
 title: "Optogenetics: Controlling Neurons with Light"
-authors: Abu Saleh Md. Farhat
+authors: Abu Saleh Md. Farhat (65th MBBS)
 segment: feature
 order: 2
 summary: "How Optogenetics redefined causal neuroscience? The 2026 Nobel Prize in Physiology or Medicine: A Review"

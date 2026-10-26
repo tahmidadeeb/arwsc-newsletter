@@ -1,9 +1,9 @@
 ---
 title: "From Scalpel to Silicon: The Dawn of Robotic Surgery in Bangladesh"
 authors:
-  - Golam Rabby Shohug
-  - Md. Israq Hossain
-  - Abu Saleh Md. Farhat
+  - Golam Rabby Shohug (66th MBBS)
+  - Md. Israq Hossain (65th MBBS)
+  - Abu Saleh Md. Farhat (65th MBBS)
 segment: feature
 order: 1
 featured: true

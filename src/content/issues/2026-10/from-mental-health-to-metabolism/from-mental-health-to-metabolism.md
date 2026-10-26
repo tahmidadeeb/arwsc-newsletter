@@ -1,9 +1,9 @@
 ---
 title: "From Mental Health to Metabolism"
 authors:
-  - Adrita Mehreen Khan
-  - Talha Jubair
-  - Mariam Chowdhury Joyeeta
+  - Adrita Mehreen Khan (65th MBBS)
+  - Talha Jubair (65th MBBS)
+  - Mariam Chowdhury Joyeeta (66th MBBS)
 segment: feature
 order: 5
 summary: "What if the root cause of metabolic dysfunction is not only what we eat but also what we think?"

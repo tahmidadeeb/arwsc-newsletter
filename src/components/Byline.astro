@@ -9,9 +9,11 @@ interface Props {
 const { authors, size = 'sm', max = 6 } = Astro.props;
 const shown = authors.length > max ? [...authors.slice(0, max - 1), `${authors.length - max + 1} others`] : authors;
 ---
-<p class:list={['byline', `byline--${size}`]}>
-  <span class="byline__by">By {formatAuthors(shown)}</span>
-</p>
+{authors.length > 0 && (
+  <p class:list={['byline', `byline--${size}`]}>
+    <span class="byline__by">By {formatAuthors(shown)}</span>
+  </p>
+)}
 
 <style>
   .byline {

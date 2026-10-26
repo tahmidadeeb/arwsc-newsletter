@@ -1,8 +1,8 @@
 ---
 title: "You’re Never Truly Alone: Meet Your Human Microbiome"
 authors:
-  - Afroza Binte Arif
-  - Asfiatush Sadiya
+  - Afroza Binte Arif (65th MBBS)
+  - Asfiatush Sadiya (65th MBBS)
 segment: feature
 order: 4
 summary: "Your gut microbiome influences the immune system, your brain, and even medicine. What if the key to understanding human health lies in the microscopic world within us?"

@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import logo from '../assets/arwsc-logo.png';
+import clubLogo from '../assets/science-club-logo.png';
 import { isPlaceholder, loadSite } from '../lib/data';
 import { NAV, SITE_TITLE } from '../lib/nav';
 import Signup from './Signup.astro';
@@ -11,7 +12,10 @@ const year = new Date().getUTCFullYear();
 <footer class="foot">
   <div class="wrap foot__grid">
     <div class="foot__brand">
-      <Image src={logo} alt="arw,sc" width={360} class="foot__logo" />
+      <div class="foot__logos">
+        <Image src={clubLogo} alt="Science Club, Rajshahi Medical College" width={160} class="foot__club-logo" />
+        <Image src={logo} alt="arw,sc" width={360} class="foot__logo" />
+      </div>
       <p class="foot__title">{SITE_TITLE}</p>
       <p class="foot__club">{site.clubName}</p>
     </div>
@@ -61,7 +65,18 @@ const year = new Date().getUTCFullYear();
       gap: 3.5rem;
     }
   }
+  .foot__logos {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.8rem, 2vw, 1.2rem);
+  }
+  .foot__club-logo {
+    flex: none;
+    width: clamp(3.75rem, 9vw, 4.75rem);
+    height: auto;
+  }
   .foot__logo {
+    min-width: 0;
     width: min(14rem, 100%);
     height: auto;
     filter: brightness(1.25);

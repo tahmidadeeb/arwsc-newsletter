@@ -1,6 +1,5 @@
 ---
 title: "Gut Flora Always Has Your Back – Oral Microbiota May Treat Food Allergy"
-authors: Science Club, Rajshahi Medical College
 segment: frontier
 order: 18
 summary: "In a small early-stage trial involving 15 people with peanut allergies, oral capsules containing gut microbes from non-allergic donors increased the amount of peanut some participants could tolerate."

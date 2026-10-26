@@ -8,6 +8,7 @@ const { members } = Astro.props;
 const initials = (name: string) =>
   name
     .replace(/PLACEHOLDER/g, '')
+    .replace(/\([^)]*\)/g, '')
     .split(/\s+/)
     .filter(Boolean)
     .slice(0, 2)

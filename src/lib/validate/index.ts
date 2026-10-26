@@ -221,10 +221,16 @@ export async function validateContent(contentDir: string, dataDir = DEFAULT_DATA
     requireString(file, data, 'summary', '"One or two sentences describing the article."');
     // authors: a name or a list of names
     const a = data.authors;
+    const treatment = segments.find((s) => s.key === String(data.segment))?.treatment;
+    const frontier = treatment === 'frontier';
     const okAuthors =
       (typeof a === 'string' && a.trim()) ||
       (Array.isArray(a) && a.length > 0 && a.every((x) => typeof x === 'string' && x.trim()));
-    if (!okAuthors) {
+    if (frontier) {
+      if (a !== undefined && a !== null) {
+        warn(file, 'Frontier entries do not list authors, so the authors line is not shown.', 'Delete the authors line from this file.');
+      }
+    } else if (!okAuthors) {
       error(file, 'The required field "authors" is missing or empty.', 'Add one name (authors: Ana Rahman) or a list:\nauthors:\n  - Ana Rahman\n  - Bo Chen');
     }
     // segment

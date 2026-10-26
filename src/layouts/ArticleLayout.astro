@@ -60,8 +60,8 @@ const description = (a.dek ?? a.summary).slice(0, 300);
           <dd><a href={issueUrl(issue.folder)}>{issue.title}</a></dd>
           {seg && <dt class="label">Section</dt>}
           {seg && <dd>{seg.label}</dd>}
-          <dt class="label">{a.authors.length === 1 ? 'Author' : 'Authors'}</dt>
-          <dd>{a.authors.map((n) => <span class="art__au">{n}</span>)}</dd>
+          {a.authors.length > 0 && <dt class="label">{a.authors.length === 1 ? 'Author' : 'Authors'}</dt>}
+          {a.authors.length > 0 && <dd>{a.authors.map((n) => <span class="art__au">{n}</span>)}</dd>}
         </dl>
       </aside>
       <div class="art__main">

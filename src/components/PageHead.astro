@@ -5,17 +5,32 @@ interface Props {
   lede?: string;
 }
 const { title, kicker, lede } = Astro.props;
+const hasAside = Astro.slots.has('aside');
 ---
-<header class="ph-head">
-  {kicker && <p class="label ph-head__k reveal" style="--i:0">{kicker}</p>}
-  <h1 class="ph-head__t reveal" style="--i:1">{title}</h1>
-  {lede && <p class="ph-head__lede reveal" style="--i:2">{lede}</p>}
+<header class:list={['ph-head', hasAside && 'ph-head--aside']}>
+  <div class="ph-head__main">
+    {kicker && <p class="label ph-head__k reveal" style="--i:0">{kicker}</p>}
+    <h1 class="ph-head__t reveal" style="--i:1">{title}</h1>
+    {lede && <p class="ph-head__lede reveal" style="--i:2">{lede}</p>}
+  </div>
+  {hasAside && <div class="ph-head__aside reveal" style="--i:3"><slot name="aside" /></div>}
 </header>
 
 <style>
   .ph-head {
     padding: clamp(2rem, 5vw, 4rem) 0 clamp(1.5rem, 3vw, 2.5rem);
     border-bottom: 1px solid var(--ink);
+  }
+  .ph-head--aside {
+    display: grid;
+    gap: 2.5rem;
+  }
+  @media (min-width: 60rem) {
+    .ph-head--aside {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+      gap: 5rem;
+      align-items: center;
+    }
   }
   .ph-head__k {
     margin: 0 0 1rem;

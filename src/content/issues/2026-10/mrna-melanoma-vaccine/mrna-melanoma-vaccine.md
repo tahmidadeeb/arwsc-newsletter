@@ -1,6 +1,5 @@
 ---
 title: "Personalized mRNA Cancer Vaccine That Stops Melanoma from Returning"
-authors: Science Club, Rajshahi Medical College
 segment: frontier
 order: 19
 summary: "A clinical trial involving more than 1,100 patients found that the personalized mRNA vaccine intismeran, combined with pembrolizumab, reduced the relative risk of melanoma recurrence or death by 42% compared with pembrolizumab alone."

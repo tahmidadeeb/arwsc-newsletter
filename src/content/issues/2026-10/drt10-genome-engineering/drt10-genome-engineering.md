@@ -1,6 +1,5 @@
 ---
 title: "A New Era of Genome Engineering: Ancient Connection Between Aging, Cancer and Evolution"
-authors: Science Club, Rajshahi Medical College
 segment: frontier
 order: 12
 summary: "Scientists discovered DRT10, a bacterial antiviral system that synthesizes DNA using RNA as a template and shares evolutionary similarities with telomerase."
