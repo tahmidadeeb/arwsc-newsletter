@@ -4,6 +4,7 @@ import PageHead from '../components/PageHead.astro';
 import Tag from '../components/Tag.astro';
 import { Image } from 'astro:assets';
 import { loadSegments, loadSite } from '../lib/data';
+import { inlineItalics, stripItalics } from '../lib/format';
 import clubLogo from '../assets/science-club-logo.png';
 import logo from '../assets/arwsc-logo.png';
 
@@ -16,9 +17,9 @@ const blurbs: Record<string, string> = {
   notice: 'News, events and calls from the club.',
 };
 ---
-<Base title="About the club" description={site.about.intro.slice(0, 200)} ogImage="/og/about.png">
+<Base title="About the club" description={stripItalics(site.about.intro).slice(0, 200)} ogImage="/og/about.png">
   <div class="wrap">
-    <PageHead kicker={site.clubName} title="About" lede={site.about.intro}>
+    <PageHead title="About" ledeHtml={inlineItalics(site.about.intro)}>
       <div slot="aside" class="about__logos">
         <Image src={clubLogo} alt="Science Club, Rajshahi Medical College" width={320} class="about__club-logo" />
         <Image src={logo} alt="arw,sc" width={640} class="about__logo" />

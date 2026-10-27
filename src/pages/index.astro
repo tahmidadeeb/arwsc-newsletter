@@ -6,7 +6,7 @@ import SegmentBlock from '../components/SegmentBlock.astro';
 import EmptyState from '../components/EmptyState.astro';
 import Signup from '../components/Signup.astro';
 import EditorsNote from '../components/EditorsNote.astro';
-import { getIssue, getIssues, getLatest } from '../lib/content';
+import { countIssueArticles, getIssue, getIssues, getLatest } from '../lib/content';
 import { blocksAfterLead } from '../lib/ordering';
 import { themeStyle } from '../lib/theme';
 import { loadSite } from '../lib/data';
@@ -60,7 +60,7 @@ const issueLine = latest ? `Issue No. ${latest.issue.issueNumber} · ${latest.is
       <ul class="earlier__grid">
         {earlier.map((b) => b && (
           <li class="themed" style={themeStyle(b.issue.theme)}>
-            <Cover issue={b.issue} size="card" level="h3" articleCount={b.articles.length} />
+            <Cover issue={b.issue} size="card" level="h3" articleCount={countIssueArticles(b.articles)} entryCount={b.articles.length} />
           </li>
         ))}
       </ul>

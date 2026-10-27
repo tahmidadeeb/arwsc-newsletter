@@ -8,8 +8,18 @@ interface Props {
   article: Article;
 }
 const { article: a } = Astro.props;
+// Only dated announcements show a date (see Article.shownDate).
+const d = a.shownDate;
+const day = d?.getUTCDate();
+const mon = d?.toLocaleString('en-GB', { month: 'short', timeZone: 'UTC' });
 ---
-<article class="nt has-stretch card-lift">
+<article class:list={['nt', 'has-stretch', 'card-lift', d && 'nt--dated']}>
+  {d && (
+    <time class="nt__date" datetime={d.toISOString().slice(0, 10)}>
+      <span class="nt__day">{day}</span>
+      <span class="nt__mon mono">{mon}</span>
+    </time>
+  )}
   <div class="nt__body">
     <h3 class="nt__t">
       <a class="stretch hover-title" href={articleUrl(a.issue, a.slug)} set:html={headlineHtml(a.title)} />
@@ -23,8 +33,31 @@ const { article: a } = Astro.props;
   .nt {
     padding: 1.1rem 1.2rem;
     border: 1px dashed color-mix(in oklab, var(--ink) 45%, transparent);
-    background: color-mix(in oklab, var(--paper) 70%, white);
+    background: var(--paper-deep);
     min-width: 0;
+  }
+  .nt--dated {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+  }
+  .nt__date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 3rem;
+    padding-right: 1rem;
+    border-right: 1px solid var(--rule);
+    color: var(--accent-text);
+  }
+  .nt__day {
+    font-family: var(--f-display);
+    font-size: 2.2rem;
+    line-height: 1;
+  }
+  .nt__mon {
+    font-size: 0.7rem;
+    text-transform: uppercase;
   }
   .nt__body {
     min-width: 0;

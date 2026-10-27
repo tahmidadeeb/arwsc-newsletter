@@ -4,7 +4,7 @@ import Cover from '../../../components/Cover.astro';
 import Toc from '../../../components/Toc.astro';
 import SegmentBlock from '../../../components/SegmentBlock.astro';
 import EditorsNote from '../../../components/EditorsNote.astro';
-import { getIssue, getIssues, type IssueBundle } from '../../../lib/content';
+import { countIssueArticles, getIssue, getIssues, type IssueBundle } from '../../../lib/content';
 import { issueUrl } from '../../../lib/nav';
 import { blocksAfterLead } from '../../../lib/ordering';
 
@@ -20,10 +20,11 @@ const bundle = (await getIssue(Astro.params.issue!)) as IssueBundle;
 const { issue, groups, lead, articles } = bundle;
 const blocks = blocksAfterLead(groups, lead?.slug);
 const leadAnchor = lead && !blocks.some((b) => b.segment.key === lead.segment) ? lead.segment : undefined;
+const counted = countIssueArticles(articles);
 ---
 <Base
   title={`${issue.title} — Issue No. ${issue.issueNumber}, ${issue.monthLabel}`}
-  description={`Issue ${issue.issueNumber} of the arw,sc newsletter, ${issue.monthLabel}: ${articles.length} ${articles.length === 1 ? 'article' : 'articles'}.`}
+  description={`Issue ${issue.issueNumber} of the arw,sc newsletter, ${issue.monthLabel}${counted > 0 ? `: ${counted} ${counted === 1 ? 'article' : 'articles'}` : ''}.`}
   theme={issue.theme}
   issueLine={`Issue No. ${issue.issueNumber} · ${issue.monthLabel}`}
   ogImage={issue.cover?.src.src ?? `/og/issues/${issue.folder}.png`}

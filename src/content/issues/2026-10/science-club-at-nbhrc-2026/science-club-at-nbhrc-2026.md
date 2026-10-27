@@ -2,6 +2,7 @@
 title: "Science Club at NBHRC 2026"
 authors: Science Club, Rajshahi Medical College
 segment: announcements
+date: 2026-10-17
 order: 2
 summary: "The 2nd National BioMed Health Research Conference (NBHRC) 2026 was held at Dhaka Medical College on October 15–16, 2026. Participants from Rajshahi Medical College had a wonderful experience attending and learning from the sessions."
 ---

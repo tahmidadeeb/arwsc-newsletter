@@ -2,6 +2,7 @@
 title: "Science Club Member Israq Hossain Secures Best Research Proposal Award at 2nd NBHRC 2026"
 authors: Science Club, Rajshahi Medical College
 segment: announcements
+date: 2026-10-17
 order: 1
 summary: "Md. Israq Hossain (65th MBBS batch) received the Best Prize for Research Proposal Submission at the 2nd National BioMed Health Research Conference (NBHRC) 2026, held at Dhaka Medical College on October 15–16."
 ---

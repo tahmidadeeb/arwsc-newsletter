@@ -20,7 +20,8 @@ heroImage: images/example-figure.jpg
 heroAlt: "Describe what the picture shows, for readers who cannot see it"
 heroCaption: "A caption shown under the top picture."
 heroCredit: "Photo: Name of photographer"
-# Not shown on the site (articles display no dates). Only for feed readers.
+# Club Announcements only: shown as a date block (e.g. 17 OCT) on the card.
+# Other sections never show a date; leave it out.
 # date: 2026-11-05
 # The editors set these:
 # featured: true      → makes this the issue's lead story

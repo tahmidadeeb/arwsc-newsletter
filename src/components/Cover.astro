@@ -21,11 +21,16 @@ interface Props {
   level?: 'h1' | 'h2' | 'h3';
   /** Link the issue title to its issue page (home page). */
   linkIssue?: boolean;
+  /** Feature and Opinion pieces only (see countsAsArticle). */
   articleCount?: number;
+  /** Every published entry, including notices and Frontier dispatches. */
+  entryCount?: number;
   /** Section key to anchor on the lead story when its section has no block of its own. */
   leadAnchor?: string;
 }
-const { issue, lead, size, level = 'h2', linkIssue = false, articleCount, leadAnchor } = Astro.props;
+const { issue, lead, size, level = 'h2', linkIssue = false, articleCount, entryCount, leadAnchor } = Astro.props;
+const tileMeta =
+  entryCount === 0 ? 'In preparation' : articleCount ? `${articleCount} ${articleCount === 1 ? 'article' : 'articles'}` : undefined;
 const H = level;
 const seg = lead ? segmentFor(lead.segment) : undefined;
 const longLead = (lead?.title.length ?? 0) > 70;
@@ -48,8 +53,11 @@ const kicker = `Issue No. ${issue.issueNumber} · ${issue.monthLabel}`;
     <div class="cover__lead reveal" style="--i:4" id={leadAnchor}>
       {lead ? (
         <div class="has-stretch cover__leadinner">
-          <p class="cover__eyebrow label">Lead story</p>
-          {seg && <Tag label={seg.label} />}
+          <div class="cover__leadhead">
+            <p class="cover__tab label">Lead story</p>
+            {seg && <Tag label={seg.label} />}
+            <span class="cover__rule" aria-hidden="true"></span>
+          </div>
           <h2 class:list={['cover__lt', longLead && 'cover__lt--long']}>
             <a class="stretch hover-title" href={articleUrl(lead.issue, lead.slug)} set:html={headlineHtml(lead.title)} />
           </h2>
@@ -77,8 +85,8 @@ const kicker = `Issue No. ${issue.issueNumber} · ${issue.monthLabel}`;
         <H class="tile__t"><a class="stretch" href={issueUrl(issue.folder)} set:html={headlineHtml(issue.title)} /></H>
       </div>
     </div>
-    {articleCount !== undefined && (
-      <p class="tile__meta mono">{articleCount === 0 ? 'In preparation' : `${articleCount} ${articleCount === 1 ? 'article' : 'articles'}`}</p>
+    {tileMeta && (
+      <p class="tile__meta mono">{tileMeta}</p>
     )}
   </article>
 )}
@@ -158,7 +166,7 @@ const kicker = `Issue No. ${issue.issueNumber} · ${issue.monthLabel}`;
   }
   .cover__kicker {
     margin: 0 0 0.7rem;
-    font-size: 0.75rem;
+    font-size: 0.9375rem;
   }
   .cover__title {
     font-size: clamp(1.9rem, 1.4rem + 2vw, 3.2rem);
@@ -195,6 +203,27 @@ const kicker = `Issue No. ${issue.issueNumber} · ${issue.monthLabel}`;
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
+  }
+  /* "Lead story": a solid accent tab, the section tag beside it, then an accent line. */
+  .cover__leadhead {
+    align-self: stretch;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem 0.75rem;
+  }
+  .cover__tab {
+    margin: 0;
+    padding: 0.45em 0.8em;
+    background: var(--accent);
+    color: var(--on-accent);
+    font-weight: 700;
+    letter-spacing: 0.16em;
+  }
+  .cover__rule {
+    flex: 1 1 3rem;
+    height: 1px;
+    background: var(--accent);
   }
   .cover__eyebrow {
     margin: 0;

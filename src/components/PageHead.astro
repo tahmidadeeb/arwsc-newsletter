@@ -3,15 +3,17 @@ interface Props {
   title: string;
   kicker?: string;
   lede?: string;
+  /** Lede as trusted HTML (already escaped), e.g. from inlineItalics(). */
+  ledeHtml?: string;
 }
-const { title, kicker, lede } = Astro.props;
+const { title, kicker, lede, ledeHtml } = Astro.props;
 const hasAside = Astro.slots.has('aside');
 ---
 <header class:list={['ph-head', hasAside && 'ph-head--aside']}>
   <div class="ph-head__main">
     {kicker && <p class="label ph-head__k reveal" style="--i:0">{kicker}</p>}
     <h1 class="ph-head__t reveal" style="--i:1">{title}</h1>
-    {lede && <p class="ph-head__lede reveal" style="--i:2">{lede}</p>}
+    {ledeHtml ? <p class="ph-head__lede reveal" style="--i:2" set:html={ledeHtml} /> : lede && <p class="ph-head__lede reveal" style="--i:2">{lede}</p>}
   </div>
   {hasAside && <div class="ph-head__aside reveal" style="--i:3"><slot name="aside" /></div>}
 </header>

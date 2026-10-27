@@ -4,7 +4,7 @@
  * Frontier dispatches are short and live only in their own section below,
  * so sections with the "frontier" treatment are left out of this list.
  */
-import type { Article } from '../lib/content';
+import { countIssueArticles, type Article } from '../lib/content';
 import { formatAuthors } from '../lib/format';
 import { articleUrl } from '../lib/nav';
 import type { Segment } from '../lib/types';
@@ -15,11 +15,13 @@ interface Props {
 }
 const { groups: all, title = 'In this issue' } = Astro.props;
 const groups = all.filter((g) => g.segment.treatment !== 'frontier');
-const n = groups.reduce((t, g) => t + g.articles.length, 0);
+const listed = groups.reduce((t, g) => t + g.articles.length, 0);
+// The total counts Feature and Opinion pieces only.
+const n = countIssueArticles(groups.flatMap((g) => g.articles));
 ---
-{n > 0 && (
+{listed > 0 && (
   <nav class="toc" aria-labelledby="toc-h">
-    <h2 class="toc__h label" id="toc-h">{title}<span class="mono toc__total">{n} {n === 1 ? 'article' : 'articles'}</span></h2>
+    <h2 class="toc__h label" id="toc-h">{title}{n > 0 && <span class="mono toc__total">{n} {n === 1 ? 'article' : 'articles'}</span>}</h2>
     <div class="toc__cols">
       {groups.map(({ segment, articles }) => (
         <section class="toc__group">
@@ -60,6 +62,12 @@ const n = groups.reduce((t, g) => t + g.articles.length, 0);
   .toc__cols {
     columns: 1;
     column-gap: 2.5rem;
+  }
+  /* Phones (below 640px) skip the contents list; tablets and computers show it. */
+  @media (max-width: 39.99rem) {
+    .toc {
+      display: none;
+    }
   }
   @media (min-width: 44rem) {
     .toc__cols {

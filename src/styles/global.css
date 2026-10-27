@@ -6,11 +6,11 @@
    an archive card); these are only the brand fallbacks.
    ------------------------------------------------------------------ */
 :root {
-  --paper: #f5f2eb;
+  --paper: #ffffff;
   --ink: #0f1b1f;
   --accent: #006c85;
   --accent-text: #006c85;
-  --on-accent: #f5f2eb;
+  --on-accent: #ffffff;
   --secondary: #0e94b1;
   --rule: color-mix(in oklab, var(--ink) 18%, transparent);
 
@@ -79,7 +79,7 @@ body {
   overflow-x: clip;
 }
 
-/* Graph paper in the margins, grain over everything, reading column clear. */
+/* Graph paper in the margins, reading column clear. */
 body::before {
   content: "";
   position: absolute;
@@ -87,24 +87,13 @@ body::before {
   z-index: -1;
   pointer-events: none;
   background-image:
-    repeating-linear-gradient(0deg, color-mix(in oklab, var(--accent) 16%, transparent) 0 1px, transparent 1px 40px),
-    repeating-linear-gradient(90deg, color-mix(in oklab, var(--accent) 16%, transparent) 0 1px, transparent 1px 40px),
-    repeating-linear-gradient(0deg, color-mix(in oklab, var(--accent) 7%, transparent) 0 1px, transparent 1px 8px),
-    repeating-linear-gradient(90deg, color-mix(in oklab, var(--accent) 7%, transparent) 0 1px, transparent 1px 8px);
+    repeating-linear-gradient(0deg, color-mix(in oklab, var(--accent) 11%, transparent) 0 1px, transparent 1px 40px),
+    repeating-linear-gradient(90deg, color-mix(in oklab, var(--accent) 11%, transparent) 0 1px, transparent 1px 40px),
+    repeating-linear-gradient(0deg, color-mix(in oklab, var(--accent) 5%, transparent) 0 1px, transparent 1px 8px),
+    repeating-linear-gradient(90deg, color-mix(in oklab, var(--accent) 5%, transparent) 0 1px, transparent 1px 8px);
   -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(50% - var(--page) / 2 - 1rem), transparent calc(50% - var(--page) / 2 + 2rem), transparent calc(50% + var(--page) / 2 - 2rem), #000 calc(50% + var(--page) / 2 + 1rem), #000 100%);
   mask-image: linear-gradient(90deg, #000 0, #000 calc(50% - var(--page) / 2 - 1rem), transparent calc(50% - var(--page) / 2 + 2rem), transparent calc(50% + var(--page) / 2 - 2rem), #000 calc(50% + var(--page) / 2 + 1rem), #000 100%);
 }
-body::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  opacity: 0.22;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.3 0 0 0 0 0.25 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
 main {
   flex: 1;
 }
@@ -297,8 +286,7 @@ picture {
 }
 
 @media print {
-  body::before,
-  body::after {
+  body::before {
     display: none;
   }
 }

@@ -60,7 +60,7 @@ _template/new-issue/issue.md    ← the issue template (with a space for the edi
 
 In an article's header: `featured: true` makes it the issue's **lead story** (if several are featured, the one with the lowest `order` wins). Without it, the lead is the article with the lowest `order`; Club Announcements are skipped unless the issue has nothing else. `order: 1, 2, 3…` sets its position within its section; this is the only thing that decides article order (dates play no part). Give every article in a section its own number. Articles without one go after the numbered ones, alphabetically by title, and the build warns about missing or repeated numbers. `draft: true` hides it.
 
-**What readers see.** Articles show no dates and no article numbers: not on cards, in the "In this issue" list, on Frontier dispatches, on announcements or on the article page. An article's `date` is optional and only goes to the RSS feed and search engines (without one, the 1st of the issue's month is used). The "In this issue" list on the cover page shows every section except The Frontier (any section with `treatment: frontier`); Frontier dispatches appear only in their own section further down, and never show author names, on the issue page or on their own page (leave `authors` out of Frontier files; if it is left in, the build warns and ignores it). Write authors' batches in brackets after their names, e.g. `Ana Rahman (65th MBBS)`. The footer and the About page show the Science Club logo next to the arw,sc logo; the files are `src/assets/science-club-logo.png` and `src/assets/arwsc-logo.png`. Sections are numbered 01, 02… in the order of `segments.yaml`, and issues are labelled in full, e.g. "Issue No. 2 · October 2026".
+**What readers see.** Articles show no dates and no article numbers: not on cards, in the "In this issue" list, on Frontier dispatches or on the article page. The one exception is **Club Announcements**: an announcement with a `date:` line shows that date as a block (e.g. 17 OCT) on its card; an announcement without one shows no date. For every other section `date` is optional and only goes to the RSS feed and search engines (without one, the 1st of the issue's month is used). Only Feature and Opinion pieces count as **articles**: the "N articles" figure on archive tiles, beside "In this issue" and in search previews ignores Club Announcements and Frontier entries (an issue with only those shows no figure). "In this issue" is hidden on phones (screens narrower than 640px) and shown on tablets and computers. The home page's top bar carries no issue line, because the cover already shows it. The "In this issue" list on the cover page shows every section except The Frontier (any section with `treatment: frontier`); Frontier dispatches appear only in their own section further down, and never show author names, on the issue page or on their own page (leave `authors` out of Frontier files; if it is left in, the build warns and ignores it). Write authors' batches in brackets after their names, e.g. `Ana Rahman (65th MBBS)`. The footer and the About page show the Science Club logo next to the arw,sc logo; the files are `src/assets/science-club-logo.png` and `src/assets/arwsc-logo.png`. Sections are numbered 01, 02… in the order of `segments.yaml`, and issues are labelled in full, e.g. "Issue No. 2 · October 2026".
 
 ## 4. Colour themes
 
@@ -75,7 +75,7 @@ or your own colours (any you leave out come from the brand theme):
 ```yaml
 theme:
   accent: "#1d3fbf"        # covers, labels and links
-  background: "#f4f0e6"    # the paper colour
+  background: "#ffffff"    # the page colour (white by default)
   ink: "#121212"           # body text
   secondary: "#c8412b"     # optional
 ```
@@ -101,12 +101,12 @@ Every piece of reader-facing text that isn't part of an issue lives in one of th
 
 | What you see on the site | File | Line to edit |
 |---|---|---|
-| Club name (under the title, footer, About page) | `site.yaml` | `clubName` |
+| Club name (under the title as "Published by the …", in the top bar of the Archive, About, Team and Contact pages, and in the footer) | `site.yaml` | `clubName` |
 | Short name in the footer (© ARW,SC) | `site.yaml` | `shortName` |
 | One-line description used by search engines and share previews | `site.yaml` | `tagline` |
 | Contact email | `site.yaml` | `contactEmail` |
 | Facebook and other links (Contact page, footer) | `site.yaml` | `social` (a `label` and `url` per link) |
-| About page: large opening sentence | `site.yaml` | `about` → `intro` |
+| About page: large opening sentence (wrap words in `*asterisks*` for italics) | `site.yaml` | `about` → `intro` |
 | About page: the paragraphs below it | `site.yaml` | `about` → `body` (one `- ` line per paragraph) |
 | About page: the description beside each section | `segments.yaml` | `description` of each section |
 | Contact page: large text at the top (joining the club) | `site.yaml` | `join` → `text` |
@@ -186,4 +186,4 @@ For developers:
 
 ## 10. The sample content
 
-The two sample issues (`2026-09`, `2026-10`) are placeholders, marked "Placeholder:" in every title. **Delete both folders** when the first real issue is ready; the site builds fine with no issues at all and shows a "first issue is in preparation" page. The sample pictures are original abstract illustrations, not photographs.
+The sample issues that came with the site have been replaced by the first real issue (`2026-10`, Issue No. 1). If every issue folder is ever removed, the site still builds and shows a "first issue is in preparation" page. Use `_template/` (an example article and a new-issue `issue.md`) as the starting point for the next issue.

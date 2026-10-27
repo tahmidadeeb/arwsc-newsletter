@@ -19,7 +19,7 @@ const { clubName } = loadSite();
 <header class:list={['mast', `mast--${variant}`]}>
   <div class="wrap">
     <div class="mast__top">
-      <span class="mast__line mono">{issueLine ?? clubName}</span>
+      <span class="mast__line mono">{variant === 'home' ? '' : issueLine ?? clubName}</span>
       <nav class="mast__nav" aria-label="Main">
         <ul>
           {NAV.map((n) => (
@@ -40,7 +40,7 @@ const { clubName } = loadSite();
           </a>
         </Title>
         <div class="mast__sub reveal" style="--i:2">
-          <span class="label">{clubName}</span>
+          <span class="label">Published by the {clubName}</span>
         </div>
         <hr class="rule rule-draw" style="--i:2" />
       </>

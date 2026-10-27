@@ -104,3 +104,16 @@ export function blocksAfterLead<T extends ArticleLike>(
     .map((g) => ({ segment: g.segment, articles: g.articles.filter((a) => a.slug !== leadSlug) }))
     .filter((g) => g.articles.length > 0);
 }
+
+/**
+ * Only Feature and Opinion pieces (treatments "standard" and "opinion") are
+ * counted as articles. Club notices and Frontier dispatches are not.
+ */
+export function countsAsArticle(a: { segment: string }, segments: readonly Segment[]): boolean {
+  const t = segments.find((s) => s.key === a.segment)?.treatment;
+  return t === 'standard' || t === 'opinion';
+}
+
+export function countArticles(list: readonly { segment: string }[], segments: readonly Segment[]): number {
+  return list.filter((a) => countsAsArticle(a, segments)).length;
+}

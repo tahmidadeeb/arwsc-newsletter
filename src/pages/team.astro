@@ -10,7 +10,7 @@ const site = loadSite();
 ---
 <Base title="Editorial team" description="The students, faculty and alumni who edit the arw,sc newsletter." ogImage="/og/team.png">
   <div class="wrap">
-    <PageHead kicker="Masthead" title="Editorial team" lede={site.team.intro} />
+    <PageHead title="Editorial team" lede={site.team.intro} />
     <div class="team-wrap">
       {team.length > 0 ? (
         <TeamGrid members={team} />

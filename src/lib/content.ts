@@ -6,7 +6,7 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import type { ImageMetadata } from 'astro';
 import { loadSegments, loadThemes } from './data';
 import { folderToDate, formatMonth } from './format';
-import { groupBySegment, nextArticle, pickLead, readingOrder, sortIssues } from './ordering';
+import { countArticles, groupBySegment, nextArticle, pickLead, readingOrder, sortIssues } from './ordering';
 import { resolveTheme, type ThemeTokens } from './theme';
 import type { Segment } from './types';
 
@@ -29,6 +29,8 @@ export interface Article {
   authors: string[];
   segment: string;
   date: Date;
+  /** Shown to readers only on Club Announcements whose file has a date: line. */
+  shownDate?: Date;
   summary: string;
   dek?: string;
   hero?: { src: ImageMetadata; alt: string; caption?: string; credit?: string };
@@ -82,6 +84,7 @@ function toArticle(entry: CollectionEntry<'articles'>): Article {
     segment: d.segment,
     // Not shown to readers; used for the RSS feed and search engines.
     date: d.date ?? folderToDate(issue),
+    shownDate: d.date && segments().find((s) => s.key === d.segment)?.treatment === 'notice' ? d.date : undefined,
     summary: d.summary,
     dek: d.dek,
     hero: d.heroImage
@@ -145,3 +148,6 @@ export async function getArticle(
 export function segmentFor(key: string): Segment | undefined {
   return segments().find((s) => s.key === key);
 }
+
+/** Number of entries that count as articles (Feature and Opinion only). */
+export const countIssueArticles = (list: readonly { segment: string }[]) => countArticles(list, segments());

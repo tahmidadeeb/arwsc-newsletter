@@ -75,10 +75,11 @@ describe('section headings', () => {
 
 describe('no dates or article numbers on the page', () => {
   const pages = () => ['', 'issues/2026-10', 'issues/2026-10/a', 'issues/2026-10/b', 'issues/2026-10/n1', 'issues/2026-10/f1', 'issues/2026-10/o1', 'issues'];
-  it('shows no article dates anywhere', () => {
+  it('shows no article dates anywhere except on Club Announcement cards', () => {
     for (const p of pages()) {
       const doc = parse(site.html(p));
       const main = doc.querySelector('main')!;
+      main.querySelectorAll('.nt').forEach((n) => n.remove());
       expect(main.querySelectorAll('time'), p).toHaveLength(0);
       expect(main.text, p).not.toMatch(/\b5 October 2026\b|\bOct\b/);
     }
@@ -87,7 +88,6 @@ describe('no dates or article numbers on the page', () => {
     const doc = parse(site.html('issues/2026-10'));
     expect(doc.querySelectorAll('.toc__n')).toHaveLength(0);
     expect(doc.querySelectorAll('.dp__n')).toHaveLength(0);
-    expect(doc.querySelectorAll('.nt__date')).toHaveLength(0);
   });
   it('lists articles in the order given by their order numbers', () => {
     const titles = parse(site.html('issues/2026-10')).querySelectorAll('.seg--frontier .dp__t').map((a) => a.text.trim());
@@ -112,7 +112,7 @@ describe('"In this issue" list', () => {
       const toc = doc.querySelector('.toc')!;
       expect(toc.querySelectorAll('.toc__seg').map((h) => h.text.trim())).toEqual(['Club Announcements', 'Feature Articles', 'Opinion']);
       expect(toc.text).not.toContain('Dispatch');
-      expect(toc.querySelector('.toc__total')!.text).toContain('4 articles');
+      expect(toc.querySelector('.toc__total')!.text).toContain('3 articles');
       expect(doc.querySelectorAll('.seg--frontier .dp__t').map((a) => a.text.trim())).toEqual(['A Dispatch', 'Another Dispatch']);
     });
   }

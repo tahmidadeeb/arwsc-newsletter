@@ -8,19 +8,19 @@
   label: Club Announcements
   order: 1
   treatment: notice
-  description: News, events and calls from the club.
+  description: The latest news from the club
 - key: feature
   label: Feature Articles
   order: 2
   treatment: standard
-  description: Long-form reporting and essays on research.
+  description: Student-written reporting on scientific topics and medical research
 - key: opinion
   label: Opinion
   order: 3
   treatment: opinion
-  description: Arguments and perspectives from members.
+  description: Essays offering the student perspective
 - key: frontier
   label: The Frontier
   order: 4
   treatment: frontier
-  description: A dispatch on recent scientific breakthroughs.
+  description: A bulletin of recent breakthroughs in medical science

@@ -39,3 +39,13 @@ export function headlineHtml(text: string): string {
     .map((part) => (part === ':' || part === ';' ? `<span class="pt">${part}</span>` : escapeHtml(part)))
     .join('');
 }
+
+/** Escapes text for HTML, then turns *phrase* into <em>phrase</em>. A lone * stays as it is. */
+export function inlineItalics(text: string): string {
+  return escapeHtml(text).replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
+}
+
+/** The same text without the *…* markers, for plain-text places (meta descriptions). */
+export function stripItalics(text: string): string {
+  return text.replace(/\*([^*\n]+)\*/g, '$1');
+}

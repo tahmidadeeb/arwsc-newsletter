@@ -36,10 +36,10 @@ The top of the file, between the two `---` lines, holds the article's details.
 | `heroImage` | The large picture at the top, e.g. `images/delta-map.jpg`. |
 | `heroAlt` | A description of that picture. **Required** if you use `heroImage`. |
 | `heroCaption`, `heroCredit` | Caption and credit shown under the top picture. |
-| `date` | Not shown anywhere on the site and not needed. If you add one, write it as year-month-day, e.g. `2026-11-05` (formats such as `05/11/2026` are rejected because they are ambiguous); it is only passed to feed readers and search engines. |
+| `date` | Only for **Club Announcements**: the date is shown on the announcement's card (e.g. 17 OCT). For every other section it is not shown and not needed. Write it as year-month-day, e.g. `2026-11-05` (formats such as `05/11/2026` are rejected because they are ambiguous). |
 | `featured`, `order`, `draft`, `issue` | Set by the editors. Leave these out. |
 
-**What readers see.** Each article shows its title, authors (with their batch), summary (and teaser, if any) and its section. Articles show **no dates and no article numbers**; the only numbers on the page are the section numbers (01, 02…) and the issue label, e.g. "Issue No. 2 · October 2026". The editors decide the order of articles within each section. Frontier dispatches are not listed under "In this issue"; they appear only in The Frontier section, with no author names.
+**What readers see.** Each article shows its title, authors (with their batch), summary (and teaser, if any) and its section. Articles show **no dates and no article numbers** (dated Club Announcements are the one exception); the only numbers on the page are the section numbers (01, 02…) and the issue label, e.g. "Issue No. 2 · October 2026". The editors decide the order of articles within each section. Frontier dispatches are not listed under "In this issue"; they appear only in The Frontier section, with no author names.
 
 **Quoting rule.** If a value contains a colon `:` or a `#`, put the whole value in double quotes:
 

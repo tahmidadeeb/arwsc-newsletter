@@ -85,3 +85,9 @@ describe('resolveTheme — secondary text contrast', () => {
     expect(r.errors.join(' ')).toMatch(/secondary text/i);
   });
 });
+
+describe('white page fallback', () => {
+  it('uses a white page when no theme sets a background', () => {
+    expect(resolveTheme(undefined, {}).tokens.paper).toBe('#ffffff');
+  });
+});

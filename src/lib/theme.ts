@@ -29,7 +29,7 @@ const AA = 4.5;
 
 const FALLBACK: Required<Omit<ThemeInput, 'preset' | 'secondary'>> = {
   accent: '#1f3a5f',
-  background: '#f6f1e7',
+  background: '#ffffff',
   ink: '#16130f',
 };
 

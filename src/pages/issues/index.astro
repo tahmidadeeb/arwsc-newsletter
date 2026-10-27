@@ -2,7 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import Cover from '../../components/Cover.astro';
 import EmptyState from '../../components/EmptyState.astro';
-import { getIssue, getIssues } from '../../lib/content';
+import { countIssueArticles, getIssue, getIssues } from '../../lib/content';
 import { themeStyle } from '../../lib/theme';
 
 const issues = await getIssues();
@@ -29,7 +29,7 @@ const years = [...new Set(bundles.map((b) => b.issue.publishDate.getUTCFullYear(
               .filter((b) => b.issue.publishDate.getUTCFullYear() === y)
               .map((b) => (
                 <li class="themed" style={themeStyle(b.issue.theme)}>
-                  <Cover issue={b.issue} size="card" level="h3" articleCount={b.articles.length} />
+                  <Cover issue={b.issue} size="card" level="h3" articleCount={countIssueArticles(b.articles)} entryCount={b.articles.length} />
                 </li>
               ))}
           </ul>
